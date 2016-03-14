@@ -35,6 +35,8 @@ public class MostraEquips extends Activity {
 			arrayList.addAll(equips);
 		}
 
+		this.setTitle("Llista d'equips");
+
 		equipsListView = (ListView)findViewById(R.id.listview_equips);
 		equipsListView.setAdapter(arrayAdapter);
 		equipsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -49,8 +51,8 @@ public class MostraEquips extends Activity {
 				if (equip == null)
 					return;
 
-				Intent mostraJugadorsEquipIntent = new Intent(MostraEquips.this,
-					MostraJugadorsEquip.class);
+				Intent mostraEquipIntent = new Intent(MostraEquips.this,
+					MostraEquip.class);
 
 				List<Jugador> llistaJugadorsEquip = equip.getJugadors();
 				List<String> nomsJugadorsEquip = new ArrayList<String>();
@@ -59,10 +61,9 @@ public class MostraEquips extends Activity {
 					nomsJugadorsEquip.add(j.getNom());
 				}
 
-				mostraJugadorsEquipIntent.putStringArrayListExtra("JugadorsEquip",
-					(ArrayList<String>)nomsJugadorsEquip);
+				mostraEquipIntent.putExtra("Equip", nomEquip);
 
-				startActivity(mostraJugadorsEquipIntent);
+				startActivity(mostraEquipIntent);
 			}
 		});
 	}

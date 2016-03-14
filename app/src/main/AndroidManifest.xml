@@ -1,28 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="edu.upc.fib.idi.sergigranell.campionatdelliga" >
+<manifest package="edu.upc.fib.idi.sergigranell.campionatdelliga"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".MostraEquips"
-            android:label="@string/title_activity_mostra_equips" >
+            android:label="@string/title_activity_mostra_equips">
         </activity>
         <activity
             android:name=".MostraJugadorsEquip"
-            android:label="@string/title_activity_mostra_jugadors_equip" >
+            android:label="@string/title_activity_mostra_jugadors_equip">
+        </activity>
+        <activity
+            android:name=".MostraEquip"
+            android:label="@string/title_activity_mostra_equip">
+        </activity>
+        <activity
+            android:name=".ImagePickerActivity">
         </activity>
     </application>
 

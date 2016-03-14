@@ -9,8 +9,13 @@ import java.util.List;
  * Created by sergi.granell on 3/14/16.
  */
 public class Equip {
+
 	private String nom;
 	private String ciutat;
+
+	private Escut escut;
+
+	private int punts;
 
 	private List<Jugador> jugadors;
 	private List<Jugador> titulars;
@@ -59,6 +64,16 @@ public class Equip {
 	public void setCiutat(String ciutat)
 	{
 		this.ciutat = ciutat;
+	}
+
+	public int getPunts()
+	{
+		return punts;
+	}
+
+	public void setPunts(int punts)
+	{
+		this.punts = punts;
 	}
 
 	public List<Jugador> getJugadors()

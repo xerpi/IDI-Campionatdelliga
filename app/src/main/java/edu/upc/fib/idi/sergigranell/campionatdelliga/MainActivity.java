@@ -84,8 +84,8 @@ public class MainActivity extends Activity {
 				mostraEquipsIntent.putStringArrayListExtra("Equips",
 					(ArrayList<String>)nomsEquips);
 
-				//startActivity(mostraEquipsIntent);
-				startActivityForResult(mostraEquipsIntent, 1);
+				startActivity(mostraEquipsIntent);
+				//startActivityForResult(mostraEquipsIntent, 1);
 			}
 		});
 	}

@@ -18,6 +18,8 @@ public class MostraJugadorsEquip extends Activity {
 
 	private ListView jugadorsEquipListView;
 	private ArrayAdapter<Jugador> arrayAdapter;
+
+	private String nomEquip;
 	private List<Jugador> jugadors;
 
 	@Override
@@ -36,7 +38,11 @@ public class MostraJugadorsEquip extends Activity {
 			for (String nom: nomJugadors) {
 				jugadors.add(db.queryJugador(nom));
 			}
+
+			nomEquip = extras.getString("Equip");
 		}
+
+		this.setTitle("Jugadors de " + nomEquip);
 
 		arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_2, android.R.id.text1, jugadors) {
 			@Override
