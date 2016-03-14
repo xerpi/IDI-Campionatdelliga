@@ -1,6 +1,9 @@
 package edu.upc.fib.idi.sergigranell.campionatdelliga;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
 import android.util.Log;
@@ -38,13 +41,7 @@ public class MostraEquip extends Activity {
 			@Override
 			public void onClick(View v)
 			{
-				Intent imagePickerIntent = new Intent(MostraEquip.this,
-					ImagePickerActivity.class);
-
-				ImagePickerActivity imagePicker = new ImagePickerActivity();
-				startActivity(imagePickerIntent);
-
-				Log.i("info", "picked: " + imagePicker.getSelectedImagePath());
+				Utils.startImagePickerActivity(MostraEquip.this);
 			}
 		});
 
@@ -77,4 +74,17 @@ public class MostraEquip extends Activity {
 		});
 	}
 
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		if (resultCode == RESULT_OK) {
+			if (requestCode == Utils.PICK_IMAGE_REQUEST) {
+				Uri selectedImageUri = data.getData();
+				String selectedImagePath = Utils.getFilePathFromURI(
+					MostraEquip.this, selectedImageUri);
+				Bitmap bm = BitmapFactory.decodeFile(selectedImagePath);
+				escutEquipImageView.setImageBitmap(bm);
+			}
+		}
+	}
 }
