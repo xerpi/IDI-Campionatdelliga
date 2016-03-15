@@ -16,9 +16,13 @@ import java.util.List;
 
 public class MostraEquip extends Activity {
 
+	private DBManager dbmgr;
+
 	private Button mostraJugadorsButton;
 	private ImageView escutEquipImageView;
-	private String nomEquip;
+
+	private Equip equip;
+	private Bitmap escutBitmap;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -27,21 +31,34 @@ public class MostraEquip extends Activity {
 		setContentView(R.layout.activity_mostra_equip);
 
 		Bundle extras = getIntent().getExtras();
-		if (extras != null) {
-			nomEquip = (String)extras.getString("Equip");
-		}
+		if (extras == null)
+			return;
 
-		this.setTitle(nomEquip);
+		String nomEquip = (String)extras.getString("Equip");
+		if (nomEquip == null)
+			return;
+
+		dbmgr = new DBManager(MostraEquip.this);
+
+		equip = dbmgr.queryEquip(nomEquip);
+		if (equip == null)
+			return;
+
+		this.setTitle(equip.getNom());
+
+		String escutFile = equip.getEscutFile();
+		escutBitmap = Utils.loadEscutBitmap(this, escutFile);
 
 		mostraJugadorsButton = (Button)findViewById(R.id.button_mostra_jugadors);
 		escutEquipImageView = (ImageView)findViewById(R.id.imageview_escut_equip);
 
-		escutEquipImageView.setImageResource(android.R.drawable.btn_star_big_off);
-		escutEquipImageView.setOnClickListener(new View.OnClickListener() {
+		escutEquipImageView.setImageBitmap(escutBitmap);
+		escutEquipImageView.setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
-			public void onClick(View v)
+			public boolean onLongClick(View v)
 			{
 				Utils.startImagePickerActivity(MostraEquip.this);
+				return true;
 			}
 		});
 
@@ -49,12 +66,6 @@ public class MostraEquip extends Activity {
 			@Override
 			public void onClick(View v)
 			{
-				DBManager dbmgr = new DBManager(MostraEquip.this);
-
-				Equip equip = dbmgr.queryEquip(nomEquip);
-				if (equip == null)
-					return;
-
 				Intent mostraJugadorsEquipIntent = new Intent(MostraEquip.this,
 					MostraJugadorsEquip.class);
 
@@ -82,8 +93,12 @@ public class MostraEquip extends Activity {
 				Uri selectedImageUri = data.getData();
 				String selectedImagePath = Utils.getFilePathFromURI(
 					MostraEquip.this, selectedImageUri);
-				Bitmap bm = BitmapFactory.decodeFile(selectedImagePath);
-				escutEquipImageView.setImageBitmap(bm);
+
+				equip.setEscutFile(selectedImagePath);
+				dbmgr.updateEquip(equip);
+
+				escutBitmap = Utils.loadEscutBitmap(this, selectedImagePath);
+				escutEquipImageView.setImageBitmap(escutBitmap);
 			}
 		}
 	}

@@ -13,9 +13,9 @@ public class Equip {
 	private String nom;
 	private String ciutat;
 
-	private Escut escut;
-
 	private int punts;
+
+	private String escutFile;
 
 	private List<Jugador> jugadors;
 	private List<Jugador> titulars;
@@ -25,6 +25,8 @@ public class Equip {
 	{
 		this.nom = nom;
 		this.ciutat = ciutat;
+		this.punts = 0;
+		this.escutFile = null;
 		jugadors = new ArrayList<Jugador>();
 		titulars = new ArrayList<Jugador>();
 		reserves = new ArrayList<Jugador>();
@@ -32,13 +34,10 @@ public class Equip {
 
 	public Equip(String nom, String ciutat, List<Jugador> jugadors)
 	{
-		this.nom = nom;
-		this.ciutat = ciutat;
-		this.jugadors = jugadors;
-		titulars = new ArrayList<Jugador>();
-		reserves = new ArrayList<Jugador>();
+		this(nom, ciutat);
 
 		for (Jugador j: jugadors) {
+			this.jugadors.add(j);
 			if (j.getTipus() == Jugador.TipusJugador.TITULAR)
 				titulars.add(j);
 			else if (j.getTipus() == Jugador.TipusJugador.RESERVA)
@@ -74,6 +73,16 @@ public class Equip {
 	public void setPunts(int punts)
 	{
 		this.punts = punts;
+	}
+
+	public String getEscutFile()
+	{
+		return escutFile;
+	}
+
+	public void setEscutFile(String escutFile)
+	{
+		this.escutFile = escutFile;
 	}
 
 	public List<Jugador> getJugadors()

@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class DBManager extends SQLiteOpenHelper {
 
-	public static final int DATABASE_VERSION = 2;
+	public static final int DATABASE_VERSION = 1;
 	public static final String DATABASE_NAME = "CampionatLliga.db";
 
 	public static abstract class JugadorsEntry implements BaseColumns {
@@ -33,6 +33,7 @@ public class DBManager extends SQLiteOpenHelper {
 		public static final String COLUMN_NAME_NOM = "nom";
 		public static final String COLUMN_NAME_CIUTAT = "ciutat";
 		public static final String COLUMN_NAME_JUGADORS = "jugadors";
+		public static final String COLUMN_NAME_ESCUTFILE = "escutfile";
 	}
 
 	private static final String SQL_CREATE_JUGADORS_ENTRIES =
@@ -47,6 +48,7 @@ public class DBManager extends SQLiteOpenHelper {
 			EquipsEntry._ID + " INTEGER PRIMARY KEY," +
 			EquipsEntry.COLUMN_NAME_NOM + " TEXT," +
 			EquipsEntry.COLUMN_NAME_CIUTAT + " TEXT," +
+			EquipsEntry.COLUMN_NAME_ESCUTFILE + " TEXT," +
 			EquipsEntry.COLUMN_NAME_JUGADORS + " TEXT" +
 			" )";
 
@@ -177,6 +179,7 @@ public class DBManager extends SQLiteOpenHelper {
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(EquipsEntry.COLUMN_NAME_NOM, equip.getNom());
 		contentValues.put(EquipsEntry.COLUMN_NAME_CIUTAT, equip.getCiutat());
+		contentValues.put(EquipsEntry.COLUMN_NAME_ESCUTFILE, equip.getEscutFile());
 		contentValues.put(EquipsEntry.COLUMN_NAME_JUGADORS, jsonJugadorsString);
 		db.insert(EquipsEntry.TABLE_NAME, null, contentValues);
 	}
@@ -188,6 +191,7 @@ public class DBManager extends SQLiteOpenHelper {
 		String[] projection = {
 			EquipsEntry.COLUMN_NAME_NOM,
 			EquipsEntry.COLUMN_NAME_CIUTAT,
+			EquipsEntry.COLUMN_NAME_ESCUTFILE,
 			EquipsEntry.COLUMN_NAME_JUGADORS
 		};
 
@@ -216,9 +220,14 @@ public class DBManager extends SQLiteOpenHelper {
 			cursor.getColumnIndexOrThrow(EquipsEntry.COLUMN_NAME_CIUTAT)
 		);
 
+		String escutFile = cursor.getString(
+			cursor.getColumnIndexOrThrow(EquipsEntry.COLUMN_NAME_ESCUTFILE)
+		);
+
 		String jsonJugadorsString = cursor.getString(
 			cursor.getColumnIndexOrThrow(EquipsEntry.COLUMN_NAME_JUGADORS)
 		);
+
 
 		JSONObject jsonJugadors = null;
 		try {
@@ -243,7 +252,11 @@ public class DBManager extends SQLiteOpenHelper {
 				e.printStackTrace();
 			}
 		}
-		return new Equip(nom, ciutat, jugadors);
+
+		Equip equip = new Equip(nom, ciutat, jugadors);
+		equip.setEscutFile(escutFile);
+
+		return equip;
 	}
 
 	public void updateEquip(Equip equip)
@@ -252,6 +265,7 @@ public class DBManager extends SQLiteOpenHelper {
 
 		ContentValues values = new ContentValues();
 		values.put(EquipsEntry.COLUMN_NAME_CIUTAT, equip.getCiutat());
+		values.put(EquipsEntry.COLUMN_NAME_ESCUTFILE, equip.getEscutFile());
 		values.put(EquipsEntry.COLUMN_NAME_JUGADORS, getJugadorsEquipAsJSONString(equip));
 
 		String selection = EquipsEntry.COLUMN_NAME_NOM + " LIKE ?";
@@ -260,7 +274,7 @@ public class DBManager extends SQLiteOpenHelper {
 		};
 
 		int count = db.update(
-			JugadorsEntry.TABLE_NAME,
+			EquipsEntry.TABLE_NAME,
 			values,
 			selection,
 			selectionArgs);
