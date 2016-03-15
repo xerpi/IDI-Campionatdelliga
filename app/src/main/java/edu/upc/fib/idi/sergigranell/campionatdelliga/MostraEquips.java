@@ -19,6 +19,7 @@ public class MostraEquips extends Activity {
 	private ListView equipsListView;
 	private ArrayAdapter<String> arrayAdapter;
 	private ArrayList<String> arrayList;
+	private DBManager dbmgr;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -29,10 +30,11 @@ public class MostraEquips extends Activity {
 		arrayList = new ArrayList<String>();
 		arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arrayList);
 
-		Bundle extras = getIntent().getExtras();
-		if (extras != null) {
-			List<String> equips = (ArrayList<String>)extras.getStringArrayList("Equips");
-			arrayList.addAll(equips);
+		dbmgr = new DBManager(MostraEquips.this);
+
+		List <Equip> equips = dbmgr.queryAllEquips();
+		for (Equip e: equips) {
+			arrayList.add(e.getNom());
 		}
 
 		this.setTitle("Llista d'equips");
@@ -44,8 +46,6 @@ public class MostraEquips extends Activity {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 			{
 				String nomEquip = (String)parent.getItemAtPosition(position);
-
-				DBManager dbmgr = new DBManager(MostraEquips.this);
 
 				Equip equip = dbmgr.queryEquip(nomEquip);
 				if (equip == null)

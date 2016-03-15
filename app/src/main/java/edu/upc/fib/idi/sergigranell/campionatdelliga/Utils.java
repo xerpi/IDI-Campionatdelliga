@@ -8,6 +8,11 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 /**
  * Created by xerpi on 3/14/16.
  */
@@ -16,6 +21,8 @@ public final class Utils {
 	public final static int PICK_IMAGE_REQUEST = 1;
 
 	public final static int ESCUT_IMAGE_MAX_SIZE = 256;
+
+	public final static String DATE_FORMAT_STRING = "HH:mm:ss dd-MM-yyyy";
 
 	public static void startImagePickerActivity(Activity context)
 	{
@@ -73,5 +80,24 @@ public final class Utils {
 		}
 
 		return Bitmap.createScaledBitmap(original, width, height, true);
+	}
+
+	public static String dateToString(Date date)
+	{
+		SimpleDateFormat dateFormat = new SimpleDateFormat(
+			DATE_FORMAT_STRING, Locale.getDefault());
+		return dateFormat.format(date);
+	}
+
+	public static Date stringToDate(String dateString)
+	{
+		SimpleDateFormat dateFormat = new SimpleDateFormat(
+			DATE_FORMAT_STRING, Locale.getDefault());
+		try {
+			return dateFormat.parse(dateString);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

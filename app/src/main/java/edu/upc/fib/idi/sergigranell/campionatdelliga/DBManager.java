@@ -12,6 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -36,11 +37,20 @@ public class DBManager extends SQLiteOpenHelper {
 		public static final String COLUMN_NAME_ESCUTFILE = "escutfile";
 	}
 
+	public static abstract class PartitsEntry {
+		public static final String TABLE_NAME = "partits";
+		public static final String COLUMN_NAME_EQUIP_LOCAL = "equip_local";
+		public static final String COLUMN_NAME_EQUIP_VISITANT = "equip_visitant";
+		public static final String COLUMN_NAME_DATA = "data";
+		public static final String COLUMN_NAME_GOLS_LOCAL = "gols_local";
+		public static final String COLUMN_NAME_GOLS_VISITANT = "gols_visitant";
+	}
+
 	private static final String SQL_CREATE_JUGADORS_ENTRIES =
 		"CREATE TABLE " + JugadorsEntry.TABLE_NAME + " (" +
 			JugadorsEntry.COLUMN_NAME_NOM + " TEXT PRIMARY KEY," +
 			JugadorsEntry.COLUMN_NAME_TIPUS + " TEXT" +
-			" )";
+		" )";
 
 	private static final String SQL_CREATE_EQUIPS_ENTRIES =
 		"CREATE TABLE " + EquipsEntry.TABLE_NAME + " (" +
@@ -48,13 +58,30 @@ public class DBManager extends SQLiteOpenHelper {
 			EquipsEntry.COLUMN_NAME_CIUTAT + " TEXT," +
 			EquipsEntry.COLUMN_NAME_ESCUTFILE + " TEXT," +
 			EquipsEntry.COLUMN_NAME_JUGADORS + " TEXT" +
-			" )";
+		" )";
+
+	private static final String SQL_CREATE_PARTITS_ENTRIES =
+		"CREATE TABLE " + PartitsEntry.TABLE_NAME + " (" +
+			PartitsEntry.COLUMN_NAME_EQUIP_LOCAL + " TEXT," +
+			PartitsEntry.COLUMN_NAME_EQUIP_VISITANT + " TEXT," +
+			PartitsEntry.COLUMN_NAME_DATA + " TEXT," +
+			PartitsEntry.COLUMN_NAME_GOLS_LOCAL + " INTEGER," +
+			PartitsEntry.COLUMN_NAME_GOLS_VISITANT + " INTEGER," +
+			"PRIMARY KEY (" +
+				PartitsEntry.COLUMN_NAME_EQUIP_LOCAL + "," +
+				PartitsEntry.COLUMN_NAME_EQUIP_VISITANT + "," +
+				PartitsEntry.COLUMN_NAME_DATA +
+			" )" +
+		" )";
 
 	private static final String SQL_DELETE_JUGADORS_ENTRIES =
 		"DROP TABLE IF EXISTS " + JugadorsEntry.TABLE_NAME;
 
 	private static final String SQL_DELETE_EQUIPS_ENTRIES =
 		"DROP TABLE IF EXISTS " + EquipsEntry.TABLE_NAME;
+
+	private static final String SQL_DELETE_PARTITS_ENTRIES =
+		"DROP TABLE IF EXISTS " + PartitsEntry.TABLE_NAME;
 
 	public DBManager(Context context)
 	{
@@ -66,6 +93,7 @@ public class DBManager extends SQLiteOpenHelper {
 	{
 		db.execSQL(SQL_CREATE_JUGADORS_ENTRIES);
 		db.execSQL(SQL_CREATE_EQUIPS_ENTRIES);
+		db.execSQL(SQL_CREATE_PARTITS_ENTRIES);
 	}
 
 	@Override
@@ -73,6 +101,7 @@ public class DBManager extends SQLiteOpenHelper {
 	{
 		db.execSQL(SQL_DELETE_JUGADORS_ENTRIES);
 		db.execSQL(SQL_DELETE_EQUIPS_ENTRIES);
+		db.execSQL(SQL_DELETE_PARTITS_ENTRIES);
 		onCreate(db);
 	}
 
@@ -87,6 +116,7 @@ public class DBManager extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getWritableDatabase();
 		db.execSQL(SQL_DELETE_JUGADORS_ENTRIES);
 		db.execSQL(SQL_DELETE_EQUIPS_ENTRIES);
+		db.execSQL(SQL_DELETE_PARTITS_ENTRIES);
 	}
 
 	public void insertJugador(Jugador jugador)
@@ -394,5 +424,164 @@ public class DBManager extends SQLiteOpenHelper {
 			return false;
 
 		return cursor.getCount() > 0;
+	}
+
+	public void insertPartit(Partit partit)
+	{
+		SQLiteDatabase db = this.getWritableDatabase();
+		ContentValues contentValues = new ContentValues();
+		contentValues.put(PartitsEntry.COLUMN_NAME_EQUIP_LOCAL,
+			partit.getLocal().getNom());
+		contentValues.put(PartitsEntry.COLUMN_NAME_EQUIP_VISITANT,
+			partit.getVisitant().getNom());
+		contentValues.put(PartitsEntry.COLUMN_NAME_DATA,
+			Utils.dateToString(partit.getData()));
+		contentValues.put(PartitsEntry.COLUMN_NAME_GOLS_LOCAL,
+			partit.getGolsLocal());
+		contentValues.put(PartitsEntry.COLUMN_NAME_GOLS_VISITANT,
+			partit.getGolsVisitant());
+		db.insert(PartitsEntry.TABLE_NAME, null, contentValues);
+	}
+
+	private Partit getPartitFromCursor(Cursor cursor)
+	{
+		String nomEquipLocal = cursor.getString(
+			cursor.getColumnIndexOrThrow(PartitsEntry.COLUMN_NAME_EQUIP_LOCAL)
+		);
+		String nomEquipVisitant = cursor.getString(
+			cursor.getColumnIndexOrThrow(PartitsEntry.COLUMN_NAME_EQUIP_VISITANT)
+		);
+		String dataString = cursor.getString(
+			cursor.getColumnIndexOrThrow(PartitsEntry.COLUMN_NAME_DATA)
+		);
+		int golsLocal = cursor.getInt(
+			cursor.getColumnIndexOrThrow(PartitsEntry.COLUMN_NAME_GOLS_LOCAL)
+		);
+		int golsVisitant = cursor.getInt(
+			cursor.getColumnIndexOrThrow(PartitsEntry.COLUMN_NAME_GOLS_VISITANT)
+		);
+
+		Equip local = this.queryEquip(nomEquipLocal);
+		Equip visitant = this.queryEquip(nomEquipVisitant);
+		Date data = Utils.stringToDate(dataString);
+
+		Partit partit = new Partit(local, visitant, data, golsLocal, golsVisitant);
+
+		return partit;
+	}
+
+		/*
+		public static final String TABLE_NAME = "partits";
+		public static final String COLUMN_NAME_EQUIP_LOCAL = "equip_local";
+		public static final String COLUMN_NAME_EQUIP_VISITANT = "equip_visitant";
+		public static final String COLUMN_NAME_DATA = "data";
+		public static final String COLUMN_NAME_GOLS_LOCAL = "gols_local";
+		public static final String COLUMN_NAME_GOLS_VISITANT = "gols_visitant";
+	 */
+
+	public Partit queryPartit(String equipLocal, String equipVisitant, String data)
+	{
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		String[] projection = {
+			PartitsEntry.COLUMN_NAME_EQUIP_LOCAL,
+			PartitsEntry.COLUMN_NAME_EQUIP_VISITANT,
+			PartitsEntry.COLUMN_NAME_DATA,
+			PartitsEntry.COLUMN_NAME_GOLS_LOCAL,
+			PartitsEntry.COLUMN_NAME_GOLS_VISITANT
+		};
+
+		String selection = PartitsEntry.COLUMN_NAME_EQUIP_LOCAL + "," +
+			PartitsEntry.COLUMN_NAME_EQUIP_VISITANT + "," +
+			PartitsEntry.COLUMN_NAME_DATA +
+			"=(?, ?, ?)";
+		String[] selectionArgs = {
+			equipLocal, equipVisitant, data
+		};
+
+		Cursor cursor = db.query(
+			PartitsEntry.TABLE_NAME,   // The table to query
+			projection,                // The columns to return
+			selection,                 // The columns for the WHERE clause
+			selectionArgs,             // The values for the WHERE clause
+			null,                      // don't group the rows
+			null,                      // don't filter by row groups
+			null                       // The sort order
+		);
+
+		if (cursor == null)
+			return null;
+
+		cursor.moveToFirst();
+
+		return getPartitFromCursor(cursor);
+	}
+
+	public List<Partit> queryAllPartits()
+	{
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		Cursor cursor = db.query(PartitsEntry.TABLE_NAME,
+			null, null, null, null, null, null);
+
+		if (cursor == null)
+			return null;
+
+		List<Partit> llistaPartits = new ArrayList<Partit>();
+
+		while (cursor.moveToNext()) {
+			llistaPartits.add(getPartitFromCursor(cursor));
+		}
+
+		return llistaPartits;
+	}
+
+	public void updatePartit(Partit partit)
+	{
+		/*SQLiteDatabase db = this.getReadableDatabase();
+
+		ContentValues values = new ContentValues();
+		values.put(PartitsEntry.COLUMN_NAME_TIPUS, partit.getTipus().toString());
+
+		String selection = PartitsEntry.COLUMN_NAME_NOM + " LIKE ?";
+		String[] selectionArgs = {
+			partit.getNom()
+		};
+
+		int count = db.update(
+			PartitsEntry.TABLE_NAME,
+			values,
+			selection,
+			selectionArgs);*/
+	}
+
+	public boolean existsPartit(String nomPartit)
+	{
+		/*SQLiteDatabase db = this.getReadableDatabase();
+
+		String[] projection = {
+			PartitsEntry.COLUMN_NAME_NOM
+		};
+
+		String selection = PartitsEntry.COLUMN_NAME_NOM + "=?";
+		String[] selectionArgs = {
+			nomPartit
+		};
+
+		Cursor cursor = db.query(
+			PartitsEntry.TABLE_NAME,  // The table to query
+			projection,                // The columns to return
+			selection,                 // The columns for the WHERE clause
+			selectionArgs,             // The values for the WHERE clause
+			null,                      // don't group the rows
+			null,                      // don't filter by row groups
+			null                  // The sort order
+		);
+
+		if (cursor == null)
+			return false;
+
+		return cursor.getCount() > 0;*/
+		return false;
 	}
 }

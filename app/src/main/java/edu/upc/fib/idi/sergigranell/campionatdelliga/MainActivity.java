@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -17,8 +18,11 @@ import java.util.List;
 public class MainActivity extends Activity {
 
 	private Button mostraEquipsButton;
+	private Button mostraPartitsButton;
 	private Equip e1, e2, e3;
+	private Partit p1, p2, p3;
 	private Hashtable<String, Equip> equipsHashTable;
+	private DBManager dbmgr;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -41,7 +45,7 @@ public class MainActivity extends Activity {
 		j3 = new Jugador("Jugador 3");
 		j3.setTipus(Jugador.TipusJugador.RESERVA);
 
-		DBManager dbmgr = new DBManager(this);
+		dbmgr = new DBManager(this);
 		//dbmgr.dropTables();
 
 		if (!dbmgr.existsJugador(j1.getNom()))
@@ -68,6 +72,14 @@ public class MainActivity extends Activity {
 		if (!dbmgr.existsEquip(e3.getNom()))
 			dbmgr.insertEquip(e3);
 
+		p1 = new Partit(e1, e2, new Date(), 0, 2);
+		p2 = new Partit(e1, e3, new Date(), 1, 2);
+		p3 = new Partit(e2, e3, new Date(), 0, 1);
+
+		dbmgr.insertPartit(p1);
+		dbmgr.insertPartit(p2);
+		dbmgr.insertPartit(p3);
+
 		mostraEquipsButton = (Button)findViewById(R.id.button_mostra_equips);
 		mostraEquipsButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -75,24 +87,18 @@ public class MainActivity extends Activity {
 			{
 				Intent mostraEquipsIntent = new Intent(MainActivity.this,
 					MostraEquips.class);
-
-				List<String> nomsEquips = new ArrayList<String>();
-				nomsEquips.add(e1.getNom());
-				nomsEquips.add(e2.getNom());
-				nomsEquips.add(e3.getNom());
-
-				/*List<Jugador> llistaJugadorsEquip = equip.getJugadors();
-				List<String> nomsJugadorsEquip = new ArrayList<String>();
-
-				for (Jugador j: llistaJugadorsEquip) {
-					nomsJugadorsEquip.add(j.getNom());
-				}*/
-
-				mostraEquipsIntent.putStringArrayListExtra("Equips",
-					(ArrayList<String>)nomsEquips);
-
 				startActivity(mostraEquipsIntent);
-				//startActivityForResult(mostraEquipsIntent, 1);
+			}
+		});
+
+		mostraPartitsButton = (Button)findViewById(R.id.button_mostra_partits);
+		mostraPartitsButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v)
+			{
+				Intent mostraPartitsIntent = new Intent(MainActivity.this,
+					MostraPartits.class);
+				startActivity(mostraPartitsIntent);
 			}
 		});
 	}

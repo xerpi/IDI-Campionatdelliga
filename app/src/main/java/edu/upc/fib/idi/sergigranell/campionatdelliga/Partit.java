@@ -1,19 +1,22 @@
 package edu.upc.fib.idi.sergigranell.campionatdelliga;
 
+import java.util.Date;
+
 /**
  * Created by xerpi on 3/14/16.
  */
 public class Partit {
 	private Equip local;
 	private Equip visitant;
-
+	private Date data;
 	private int golsLocal;
 	private int golsVisitant;
 
-	public Partit(Equip local, Equip visitant, int golsLocal, int golsVisitant)
+	public Partit(Equip local, Equip visitant, Date data, int golsLocal, int golsVisitant)
 	{
 		this.local = local;
 		this.visitant = visitant;
+		this.data = data;
 		this.golsLocal = golsLocal;
 		this.golsVisitant = golsVisitant;
 	}
@@ -37,6 +40,17 @@ public class Partit {
 	{
 		this.visitant = visitant;
 	}
+
+	public Date getData()
+	{
+		return data;
+	}
+
+	public void setData(Date data)
+	{
+		this.data = data;
+	}
+
 
 	public int getGolsVisitant()
 	{

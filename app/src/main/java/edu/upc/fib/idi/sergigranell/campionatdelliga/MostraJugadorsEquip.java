@@ -19,7 +19,6 @@ public class MostraJugadorsEquip extends Activity {
 	private ListView jugadorsEquipListView;
 	private ArrayAdapter<Jugador> arrayAdapter;
 
-	private String nomEquip;
 	private List<Jugador> jugadors;
 
 	@Override
@@ -32,13 +31,12 @@ public class MostraJugadorsEquip extends Activity {
 		DBManager db = new DBManager(this);
 
 		Bundle extras = getIntent().getExtras();
+		String nomEquip = null;
 		if (extras != null) {
 			List<String> nomJugadors = (ArrayList<String>)extras.getStringArrayList("JugadorsEquip");
-
 			for (String nom: nomJugadors) {
 				jugadors.add(db.queryJugador(nom));
 			}
-
 			nomEquip = extras.getString("Equip");
 		}
 

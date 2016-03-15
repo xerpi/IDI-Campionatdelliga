@@ -6,4 +6,5 @@
     <string name="title_activity_mostra_equips">MostraEquips</string>
     <string name="title_activity_mostra_jugadors_equip">MostraJugadorsEquip</string>
     <string name="title_activity_mostra_equip">MostraEquip</string>
+    <string name="title_activity_mostra_partits">MostraPartits</string>
 </resources>

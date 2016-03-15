@@ -2,7 +2,7 @@
 <manifest package="edu.upc.fib.idi.sergigranell.campionatdelliga"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -29,6 +29,10 @@
         <activity
             android:name=".MostraEquip"
             android:label="@string/title_activity_mostra_equip">
+        </activity>
+        <activity
+            android:name=".MostraPartits"
+            android:label="@string/title_activity_mostra_partits">
         </activity>
     </application>
 
