@@ -3,6 +3,7 @@ package edu.upc.fib.idi.sergigranell.campionatdelliga;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,9 +44,12 @@ public class MainActivity extends Activity {
 		DBManager dbmgr = new DBManager(this);
 		//dbmgr.dropTables();
 
-		dbmgr.insertJugador(j1);
-		dbmgr.insertJugador(j2);
-		dbmgr.insertJugador(j3);
+		if (!dbmgr.existsJugador(j1.getNom()))
+			dbmgr.insertJugador(j1);
+		if (!dbmgr.existsJugador(j2.getNom()))
+			dbmgr.insertJugador(j2);
+		if (!dbmgr.existsJugador(j3.getNom()))
+			dbmgr.insertJugador(j3);
 
 		e1.addJugador(j1);
 		e1.addJugador(j2);
@@ -57,9 +61,12 @@ public class MainActivity extends Activity {
 		e3.addJugador(j2);
 		e3.addJugador(j3);
 
-		dbmgr.insertEquip(e1);
-		dbmgr.insertEquip(e2);
-		dbmgr.insertEquip(e3);
+		if (!dbmgr.existsEquip(e1.getNom()))
+			dbmgr.insertEquip(e1);
+		if (!dbmgr.existsEquip(e2.getNom()))
+			dbmgr.insertEquip(e2);
+		if (!dbmgr.existsEquip(e3.getNom()))
+			dbmgr.insertEquip(e3);
 
 		mostraEquipsButton = (Button)findViewById(R.id.button_mostra_equips);
 		mostraEquipsButton.setOnClickListener(new View.OnClickListener() {

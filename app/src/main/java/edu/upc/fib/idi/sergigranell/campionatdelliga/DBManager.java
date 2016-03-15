@@ -22,13 +22,13 @@ public class DBManager extends SQLiteOpenHelper {
 	public static final int DATABASE_VERSION = 1;
 	public static final String DATABASE_NAME = "CampionatLliga.db";
 
-	public static abstract class JugadorsEntry implements BaseColumns {
+	public static abstract class JugadorsEntry {
 		public static final String TABLE_NAME = "jugadors";
 		public static final String COLUMN_NAME_NOM = "nom";
 		public static final String COLUMN_NAME_TIPUS = "tipus";
 	}
 
-	public static abstract class EquipsEntry implements BaseColumns {
+	public static abstract class EquipsEntry {
 		public static final String TABLE_NAME = "equips";
 		public static final String COLUMN_NAME_NOM = "nom";
 		public static final String COLUMN_NAME_CIUTAT = "ciutat";
@@ -38,15 +38,13 @@ public class DBManager extends SQLiteOpenHelper {
 
 	private static final String SQL_CREATE_JUGADORS_ENTRIES =
 		"CREATE TABLE " + JugadorsEntry.TABLE_NAME + " (" +
-			JugadorsEntry._ID + " INTEGER PRIMARY KEY," +
-			JugadorsEntry.COLUMN_NAME_NOM + " TEXT," +
+			JugadorsEntry.COLUMN_NAME_NOM + " TEXT PRIMARY KEY," +
 			JugadorsEntry.COLUMN_NAME_TIPUS + " TEXT" +
 			" )";
 
 	private static final String SQL_CREATE_EQUIPS_ENTRIES =
 		"CREATE TABLE " + EquipsEntry.TABLE_NAME + " (" +
-			EquipsEntry._ID + " INTEGER PRIMARY KEY," +
-			EquipsEntry.COLUMN_NAME_NOM + " TEXT," +
+			EquipsEntry.COLUMN_NAME_NOM + " TEXT PRIMARY KEY," +
 			EquipsEntry.COLUMN_NAME_CIUTAT + " TEXT," +
 			EquipsEntry.COLUMN_NAME_ESCUTFILE + " TEXT," +
 			EquipsEntry.COLUMN_NAME_JUGADORS + " TEXT" +
@@ -100,6 +98,20 @@ public class DBManager extends SQLiteOpenHelper {
 		db.insert(JugadorsEntry.TABLE_NAME, null, contentValues);
 	}
 
+	private Jugador getJugadorFromCursor(Cursor cursor)
+	{
+		String nom = cursor.getString(
+			cursor.getColumnIndexOrThrow(JugadorsEntry.COLUMN_NAME_NOM)
+		);
+		Jugador.TipusJugador tipus = Jugador.TipusJugador.valueOf(
+			cursor.getString(cursor.getColumnIndexOrThrow(JugadorsEntry.COLUMN_NAME_TIPUS))
+		);
+
+		Jugador jugador = new Jugador(nom, tipus);
+
+		return jugador;
+	}
+
 	public Jugador queryJugador(String nom)
 	{
 		SQLiteDatabase db = this.getReadableDatabase();
@@ -130,11 +142,26 @@ public class DBManager extends SQLiteOpenHelper {
 
 		cursor.moveToFirst();
 
-		Jugador.TipusJugador tipus = Jugador.TipusJugador.valueOf(
-			cursor.getString(cursor.getColumnIndexOrThrow(JugadorsEntry.COLUMN_NAME_TIPUS))
-		);
+		return getJugadorFromCursor(cursor);
+	}
 
-		return new Jugador(nom, tipus);
+	public List<Jugador> queryAllJugadors()
+	{
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		Cursor cursor = db.query(JugadorsEntry.TABLE_NAME,
+			null, null, null, null, null, null);
+
+		if (cursor == null)
+			return null;
+
+		List<Jugador> llistaJugadors = new ArrayList<Jugador>();
+
+		while (cursor.moveToNext()) {
+			llistaJugadors.add(getJugadorFromCursor(cursor));
+		}
+
+		return llistaJugadors;
 	}
 
 	public void updateJugador(Jugador jugador)
@@ -154,6 +181,35 @@ public class DBManager extends SQLiteOpenHelper {
 			values,
 			selection,
 			selectionArgs);
+	}
+
+	public boolean existsJugador(String nomJugador)
+	{
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		String[] projection = {
+			JugadorsEntry.COLUMN_NAME_NOM
+		};
+
+		String selection = JugadorsEntry.COLUMN_NAME_NOM + "=?";
+		String[] selectionArgs = {
+			nomJugador
+		};
+
+		Cursor cursor = db.query(
+			JugadorsEntry.TABLE_NAME,  // The table to query
+			projection,                // The columns to return
+			selection,                 // The columns for the WHERE clause
+			selectionArgs,             // The values for the WHERE clause
+			null,                      // don't group the rows
+			null,                      // don't filter by row groups
+			null                  // The sort order
+		);
+
+		if (cursor == null)
+			return false;
+
+		return cursor.getCount() > 0;
 	}
 
 	private String getJugadorsEquipAsJSONString(Equip equip)
@@ -182,6 +238,58 @@ public class DBManager extends SQLiteOpenHelper {
 		contentValues.put(EquipsEntry.COLUMN_NAME_ESCUTFILE, equip.getEscutFile());
 		contentValues.put(EquipsEntry.COLUMN_NAME_JUGADORS, jsonJugadorsString);
 		db.insert(EquipsEntry.TABLE_NAME, null, contentValues);
+	}
+
+	private List<Jugador> getJugadorsEquipFromJSONString(String jsonJugadorsString)
+	{
+		JSONObject jsonJugadors = null;
+		try {
+			jsonJugadors = new JSONObject(jsonJugadorsString);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		JSONArray jugadorsArray = null;
+		try {
+			jugadorsArray = jsonJugadors.getJSONArray("jugadors");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		List<Jugador> jugadors = new ArrayList<Jugador>();
+		for (int i = 0; i < jugadorsArray.length(); i++) {
+			try {
+				String nomJugador = jugadorsArray.getString(i);
+				jugadors.add(this.queryJugador(nomJugador));
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return jugadors;
+	}
+
+	private Equip getEquipFromCursor(Cursor cursor)
+	{
+		String nom = cursor.getString(
+			cursor.getColumnIndexOrThrow(EquipsEntry.COLUMN_NAME_NOM)
+		);
+		String ciutat = cursor.getString(
+			cursor.getColumnIndexOrThrow(EquipsEntry.COLUMN_NAME_CIUTAT)
+		);
+		String escutFile = cursor.getString(
+			cursor.getColumnIndexOrThrow(EquipsEntry.COLUMN_NAME_ESCUTFILE)
+		);
+		String jsonJugadorsString = cursor.getString(
+			cursor.getColumnIndexOrThrow(EquipsEntry.COLUMN_NAME_JUGADORS)
+		);
+
+		List<Jugador> jugadors = getJugadorsEquipFromJSONString(jsonJugadorsString);
+
+		Equip equip = new Equip(nom, ciutat, jugadors);
+		equip.setEscutFile(escutFile);
+
+		return equip;
 	}
 
 	public Equip queryEquip(String nom)
@@ -216,47 +324,26 @@ public class DBManager extends SQLiteOpenHelper {
 
 		cursor.moveToFirst();
 
-		String ciutat = cursor.getString(
-			cursor.getColumnIndexOrThrow(EquipsEntry.COLUMN_NAME_CIUTAT)
-		);
+		return getEquipFromCursor(cursor);
+	}
 
-		String escutFile = cursor.getString(
-			cursor.getColumnIndexOrThrow(EquipsEntry.COLUMN_NAME_ESCUTFILE)
-		);
+	public List<Equip> queryAllEquips()
+	{
+		SQLiteDatabase db = this.getReadableDatabase();
 
-		String jsonJugadorsString = cursor.getString(
-			cursor.getColumnIndexOrThrow(EquipsEntry.COLUMN_NAME_JUGADORS)
-		);
+		Cursor cursor = db.query(EquipsEntry.TABLE_NAME,
+			null, null, null, null, null, null);
 
+		if (cursor == null)
+			return null;
 
-		JSONObject jsonJugadors = null;
-		try {
-			jsonJugadors = new JSONObject(jsonJugadorsString);
-		} catch (JSONException e) {
-			e.printStackTrace();
+		List<Equip> llistaEquips = new ArrayList<Equip>();
+
+		while (cursor.moveToNext()) {
+			llistaEquips.add(getEquipFromCursor(cursor));
 		}
 
-		JSONArray jugadorsArray = null;
-		try {
-			jugadorsArray = jsonJugadors.getJSONArray("jugadors");
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-
-		List<Jugador> jugadors = new ArrayList<Jugador>();
-		for (int i = 0; i < jugadorsArray.length(); i++) {
-			try {
-				String nomJugador = jugadorsArray.getString(i);
-				jugadors.add(this.queryJugador(nomJugador));
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-		}
-
-		Equip equip = new Equip(nom, ciutat, jugadors);
-		equip.setEscutFile(escutFile);
-
-		return equip;
+		return llistaEquips;
 	}
 
 	public void updateEquip(Equip equip)
@@ -278,5 +365,34 @@ public class DBManager extends SQLiteOpenHelper {
 			values,
 			selection,
 			selectionArgs);
+	}
+
+	public boolean existsEquip(String nomEquip)
+	{
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		String[] projection = {
+			EquipsEntry.COLUMN_NAME_NOM
+		};
+
+		String selection = EquipsEntry.COLUMN_NAME_NOM + "=?";
+		String[] selectionArgs = {
+			nomEquip
+		};
+
+		Cursor cursor = db.query(
+			EquipsEntry.TABLE_NAME,  // The table to query
+			projection,                // The columns to return
+			selection,                 // The columns for the WHERE clause
+			selectionArgs,             // The values for the WHERE clause
+			null,                      // don't group the rows
+			null,                      // don't filter by row groups
+			null                  // The sort order
+		);
+
+		if (cursor == null)
+			return false;
+
+		return cursor.getCount() > 0;
 	}
 }
