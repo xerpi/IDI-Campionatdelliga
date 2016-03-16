@@ -10,7 +10,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MostraPartits extends Activity {
@@ -75,4 +74,10 @@ public class MostraPartits extends Activity {
 		});
 	}
 
+	@Override
+	protected void onDestroy()
+	{
+		super.onDestroy();
+		dbmgr.close();
+	}
 }

@@ -134,6 +134,13 @@ public class MainActivity extends Activity {
 	}
 
 	@Override
+	protected void onDestroy()
+	{
+		super.onDestroy();
+		dbmgr.close();
+	}
+
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
 		// Inflate the menu; this adds items to the action bar if it is present.

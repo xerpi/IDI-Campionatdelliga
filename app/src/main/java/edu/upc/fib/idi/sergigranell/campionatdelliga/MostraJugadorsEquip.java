@@ -56,6 +56,5 @@ public class MostraJugadorsEquip extends Activity {
 		jugadorsEquipListView = (ListView)findViewById(R.id.listview_jugadors_equip);
 		jugadorsEquipListView.setAdapter(arrayAdapter);
 	}
-
 }
 

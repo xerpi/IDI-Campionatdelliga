@@ -57,4 +57,10 @@ public class MostraJornades extends Activity {
 		});
 	}
 
+	@Override
+	protected void onDestroy()
+	{
+		super.onDestroy();
+		dbmgr.close();
+	}
 }

@@ -60,4 +60,11 @@ public class MostraPartit extends Activity {
 		dataTextView = (TextView)findViewById(R.id.textview_data);
 		dataTextView.setText(Utils.dateToString(partit.getData()));
 	}
+
+	@Override
+	protected void onDestroy()
+	{
+		super.onDestroy();
+		dbmgr.close();
+	}
 }

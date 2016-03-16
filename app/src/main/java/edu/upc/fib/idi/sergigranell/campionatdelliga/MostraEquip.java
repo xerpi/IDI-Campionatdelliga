@@ -100,4 +100,11 @@ public class MostraEquip extends Activity {
 			}
 		}
 	}
+
+	@Override
+	protected void onDestroy()
+	{
+		super.onDestroy();
+		dbmgr.close();
+	}
 }
