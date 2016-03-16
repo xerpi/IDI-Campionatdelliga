@@ -38,6 +38,14 @@
             android:name=".MostraPartit"
             android:label="@string/title_activity_mostra_partit">
         </activity>
+        <activity
+            android:name=".MostraJornades"
+            android:label="@string/title_activity_mostra_jornades">
+        </activity>
+        <activity
+            android:name=".MostraJornada"
+            android:label="@string/title_activity_mostra_jornada">
+        </activity>
     </application>
 
 </manifest>

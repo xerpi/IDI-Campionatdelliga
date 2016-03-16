@@ -11,52 +11,50 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 
+public class MostraJornades extends Activity {
 
-public class MostraEquips extends Activity {
-
-	private ListView equipsListView;
+	private ListView jornadesListView;
 	private ArrayAdapter<String> arrayAdapter;
 	private ArrayList<String> arrayList;
 
 	private DBManager dbmgr;
 
-	private List<Equip> equips;
+	private List<Jornada> jornades;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_mostra_equips);
+		setContentView(R.layout.activity_mostra_jornades);
 
 		arrayList = new ArrayList<String>();
 		arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arrayList);
 
 		dbmgr = new DBManager(this);
 
-		equips = dbmgr.queryAllEquips();
-		for (Equip e: equips) {
-			arrayList.add(e.getNom());
+		jornades = dbmgr.queryAllJornades();
+		for (Jornada j: jornades) {
+			arrayList.add("Jornada " + j.getNumero());
 		}
 
-		this.setTitle("Llista d'equips");
+		this.setTitle("Llista de les jornades");
 
-		equipsListView = (ListView)findViewById(R.id.listview_equips);
-		equipsListView.setAdapter(arrayAdapter);
-		equipsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		jornadesListView = (ListView)findViewById(R.id.listview_jornades);
+		jornadesListView.setAdapter(arrayAdapter);
+		jornadesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 			{
-				Equip equip = equips.get(position);
+				Jornada jornada = jornades.get(position);
 
-				Intent mostraEquipIntent = new Intent(MostraEquips.this,
-					MostraEquip.class);
+				Intent mostraJornadaIntent = new Intent(MostraJornades.this,
+					MostraJornada.class);
 
-				mostraEquipIntent.putExtra("Equip", equip.getNom());
+				mostraJornadaIntent.putExtra("Numero", jornada.getNumero());
 
-				startActivity(mostraEquipIntent);
+				startActivity(mostraJornadaIntent);
 			}
 		});
 	}
 
 }
-

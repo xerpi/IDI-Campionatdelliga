@@ -8,4 +8,6 @@
     <string name="title_activity_mostra_equip">MostraEquip</string>
     <string name="title_activity_mostra_partits">MostraPartits</string>
     <string name="title_activity_mostra_partit">MostraPartit</string>
+    <string name="title_activity_mostra_jornades">MostraJornades</string>
+    <string name="title_activity_mostra_jornada">MostraJornada</string>
 </resources>

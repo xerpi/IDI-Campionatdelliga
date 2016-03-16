@@ -18,11 +18,14 @@ public class MainActivity extends Activity {
 
 	private Button mostraEquipsButton;
 	private Button mostraPartitsButton;
+	private Button mostraJornadesButton;
+
+	private DBManager dbmgr;
+
 	private Equip e1, e2, e3;
 	private Partit p1, p2, p3;
 	private Jornada jornada1, jornada2;
 	private Hashtable<String, Equip> equipsHashTable;
-	private DBManager dbmgr;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -115,6 +118,17 @@ public class MainActivity extends Activity {
 				Intent mostraPartitsIntent = new Intent(MainActivity.this,
 					MostraPartits.class);
 				startActivity(mostraPartitsIntent);
+			}
+		});
+
+		mostraJornadesButton = (Button)findViewById(R.id.button_mostra_jornades);
+		mostraJornadesButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v)
+			{
+				Intent mostraJornadesIntent = new Intent(MainActivity.this,
+					MostraJornades.class);
+				startActivity(mostraJornadesIntent);
 			}
 		});
 	}
