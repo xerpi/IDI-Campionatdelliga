@@ -46,6 +46,10 @@
             android:name=".MostraJornada"
             android:label="@string/title_activity_mostra_jornada">
         </activity>
+        <activity
+            android:name=".AfegirPartit"
+            android:label="@string/title_activity_afegir_partit">
+        </activity>
     </application>
 
 </manifest>

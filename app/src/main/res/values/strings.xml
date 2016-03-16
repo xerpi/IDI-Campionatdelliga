@@ -10,4 +10,5 @@
     <string name="title_activity_mostra_partit">MostraPartit</string>
     <string name="title_activity_mostra_jornades">MostraJornades</string>
     <string name="title_activity_mostra_jornada">MostraJornada</string>
+    <string name="title_activity_afegir_partit">AfegirPartit</string>
 </resources>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="edu.upc.fib.idi.sergigranell.campionatdelliga.AfegirPartit">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cancel·lar"
+        android:id="@+id/afegir_partit_button_cancelar"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Acceptar"
+        android:id="@+id/afegir_partit_button_acceptar"
+        android:layout_alignBottom="@+id/afegir_partit_button_cancelar"
+        android:layout_alignParentEnd="true"/>
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/afegir_partit_spinner_equip_local"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/afegir_partit_textview_equip_visitant"/>
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/afegir_partit_spinner_equip_visitant"
+        android:layout_below="@+id/afegir_partit_spinner_equip_local"
+        android:layout_toEndOf="@+id/afegir_partit_textview_equip_visitant"/>
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/afegir_partit_spinner_jornada"
+        android:layout_below="@+id/afegir_partit_spinner_equip_visitant"
+        android:layout_toEndOf="@+id/afegir_partit_textview_equip_visitant"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Jornada"
+        android:id="@+id/afegir_partit_textview_jornada"
+        android:gravity="center_vertical"
+        android:layout_alignTop="@+id/afegir_partit_spinner_jornada"
+        android:layout_alignParentStart="true"
+        android:layout_alignBottom="@+id/afegir_partit_spinner_jornada"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Equip visitant"
+        android:id="@+id/afegir_partit_textview_equip_visitant"
+        android:layout_below="@+id/afegir_partit_spinner_equip_local"
+        android:layout_alignParentStart="true"
+        android:layout_alignBottom="@+id/afegir_partit_spinner_equip_visitant"
+        android:gravity="center_vertical"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Equip local"
+        android:id="@+id/afegir_partit_textview_equip_local"
+        android:gravity="center_vertical"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignBottom="@+id/afegir_partit_spinner_equip_local"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Gols:"
+        android:id="@+id/afegir_partit_textview_gols_string"
+        android:layout_below="@+id/afegir_partit_spinner_jornada"
+        android:layout_alignParentStart="true"/>
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Afegir gol"
+        android:id="@+id/afegir_partit_button_afegir_gol"
+        android:layout_alignBottom="@+id/afegir_partit_textview_gols_string"
+        android:layout_alignStart="@+id/afegir_partit_button_acceptar"
+        android:textSize="10dp"
+        />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/afegir_partit_listview_gols"
+        android:layout_below="@+id/afegir_partit_button_afegir_gol"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/afegir_partit_button_cancelar"/>
+
+</RelativeLayout>

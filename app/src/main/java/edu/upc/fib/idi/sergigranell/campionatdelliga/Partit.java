@@ -76,6 +76,11 @@ public class Partit {
 		this.gols = new ArrayList<Gol>();
 	}
 
+	public Partit(Equip local, Equip visitant, Date data)
+	{
+		this(local, visitant, data, 0, 0);
+	}
+
 	public Equip getLocal()
 	{
 		return local;

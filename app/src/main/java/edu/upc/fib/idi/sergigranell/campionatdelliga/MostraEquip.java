@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,10 @@ public class MostraEquip extends Activity {
 
 	private DBManager dbmgr;
 
+	private TextView partitsGuanyatsTextView;
+	private TextView partitsEmpatatsTextView;
+	private TextView partitsPerdutsTextView;
+	private TextView puntsTextView;
 	private Button mostraJugadorsButton;
 	private ImageView escutEquipImageView;
 
@@ -47,8 +52,20 @@ public class MostraEquip extends Activity {
 		String escutFile = equip.getEscutFile();
 		escutBitmap = Utils.loadEscutBitmap(this, escutFile);
 
+		partitsGuanyatsTextView = (TextView)findViewById(
+			R.id.mostra_equip_textview_partits_guanyats);
+		partitsEmpatatsTextView = (TextView)findViewById(
+			R.id.mostra_equip_textview_partits_empatats);
+		partitsPerdutsTextView = (TextView)findViewById(
+			R.id.mostra_equip_textview_partits_perduts);
+		puntsTextView = (TextView)findViewById(R.id.mostra_equip_textview_punts);
 		mostraJugadorsButton = (Button)findViewById(R.id.button_mostra_jugadors);
 		escutEquipImageView = (ImageView)findViewById(R.id.imageview_escut_equip);
+
+		partitsGuanyatsTextView.setText(Integer.toString(equip.getPartitsGuanyats()));
+		partitsEmpatatsTextView.setText(Integer.toString(equip.getPartitsEmpatats()));
+		partitsPerdutsTextView.setText(Integer.toString(equip.getPartitsPerduts()));
+		puntsTextView.setText(Integer.toString(equip.getPunts()));
 
 		escutEquipImageView.setImageBitmap(escutBitmap);
 		escutEquipImageView.setOnLongClickListener(new View.OnLongClickListener() {

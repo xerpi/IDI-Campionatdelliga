@@ -13,7 +13,9 @@ public class Equip {
 	private String nom;
 	private String ciutat;
 
-	private int punts;
+	private int partitsGuanyats;
+	private int partitsPerduts;
+	private int partitsEmpatats;
 
 	private String escutFile;
 
@@ -25,7 +27,9 @@ public class Equip {
 	{
 		this.nom = nom;
 		this.ciutat = ciutat;
-		this.punts = 0;
+		this.partitsGuanyats = 0;
+		this.partitsEmpatats = 0;
+		this.partitsPerduts = 0;
 		this.escutFile = null;
 		jugadors = new ArrayList<Jugador>();
 		titulars = new ArrayList<Jugador>();
@@ -65,14 +69,34 @@ public class Equip {
 		this.ciutat = ciutat;
 	}
 
-	public int getPunts()
+	public int getPartitsGuanyats()
 	{
-		return punts;
+		return partitsGuanyats;
 	}
 
-	public void setPunts(int punts)
+	public void setPartitsGuanyats(int partitsGuanyats)
 	{
-		this.punts = punts;
+		this.partitsGuanyats = partitsGuanyats;
+	}
+
+	public int getPartitsPerduts()
+	{
+		return partitsPerduts;
+	}
+
+	public void setPartitsPerduts(int partitsPerduts)
+	{
+		this.partitsPerduts = partitsPerduts;
+	}
+
+	public int getPartitsEmpatats()
+	{
+		return partitsEmpatats;
+	}
+
+	public void setPartitsEmpatats(int partitsEmpatats)
+	{
+		this.partitsEmpatats = partitsEmpatats;
 	}
 
 	public String getEscutFile()
@@ -98,6 +122,11 @@ public class Equip {
 	public List<Jugador> getReserves()
 	{
 		return reserves;
+	}
+
+	public int getPunts()
+	{
+		return 3 * partitsGuanyats + 1 * partitsEmpatats;
 	}
 
 	public void addJugador(Jugador jugador)

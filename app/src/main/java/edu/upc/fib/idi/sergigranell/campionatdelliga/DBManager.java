@@ -32,6 +32,9 @@ public class DBManager extends SQLiteOpenHelper {
 		public static final String TABLE_NAME = "equips";
 		public static final String COLUMN_NAME_NOM = "nom";
 		public static final String COLUMN_NAME_CIUTAT = "ciutat";
+		public static final String COLUMN_NAME_PARTITS_GUANYATS = "partits_guanyats";
+		public static final String COLUMN_NAME_PARTITS_EMPATATS = "partits_empatats";
+		public static final String COLUMN_NAME_PARTITS_PERDUTS = "partits_perduts";
 		public static final String COLUMN_NAME_JUGADORS = "jugadors";
 		public static final String COLUMN_NAME_ESCUTFILE = "escutfile";
 	}
@@ -62,6 +65,9 @@ public class DBManager extends SQLiteOpenHelper {
 		"CREATE TABLE " + EquipsEntry.TABLE_NAME + " (" +
 			EquipsEntry.COLUMN_NAME_NOM + " TEXT PRIMARY KEY," +
 			EquipsEntry.COLUMN_NAME_CIUTAT + " TEXT," +
+			EquipsEntry.COLUMN_NAME_PARTITS_GUANYATS + " INTEGER," +
+			EquipsEntry.COLUMN_NAME_PARTITS_EMPATATS + " INTEGER," +
+			EquipsEntry.COLUMN_NAME_PARTITS_PERDUTS + " INTEGER," +
 			EquipsEntry.COLUMN_NAME_ESCUTFILE + " TEXT," +
 			EquipsEntry.COLUMN_NAME_JUGADORS + " TEXT" +
 		" )";
@@ -305,6 +311,9 @@ public class DBManager extends SQLiteOpenHelper {
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(EquipsEntry.COLUMN_NAME_NOM, equip.getNom());
 		contentValues.put(EquipsEntry.COLUMN_NAME_CIUTAT, equip.getCiutat());
+		contentValues.put(EquipsEntry.COLUMN_NAME_PARTITS_GUANYATS, equip.getPartitsGuanyats());
+		contentValues.put(EquipsEntry.COLUMN_NAME_PARTITS_EMPATATS, equip.getPartitsEmpatats());
+		contentValues.put(EquipsEntry.COLUMN_NAME_PARTITS_PERDUTS, equip.getPartitsPerduts());
 		contentValues.put(EquipsEntry.COLUMN_NAME_ESCUTFILE, equip.getEscutFile());
 		contentValues.put(EquipsEntry.COLUMN_NAME_JUGADORS, jsonJugadorsString);
 		db.insert(EquipsEntry.TABLE_NAME, null, contentValues);
@@ -348,6 +357,15 @@ public class DBManager extends SQLiteOpenHelper {
 		String ciutat = cursor.getString(
 			cursor.getColumnIndexOrThrow(EquipsEntry.COLUMN_NAME_CIUTAT)
 		);
+		int partitsGuanyats = cursor.getInt(
+			cursor.getColumnIndexOrThrow(EquipsEntry.COLUMN_NAME_PARTITS_GUANYATS)
+		);
+		int partitsPerduts = cursor.getInt(
+			cursor.getColumnIndexOrThrow(EquipsEntry.COLUMN_NAME_PARTITS_PERDUTS)
+		);
+		int partitsEmpatats = cursor.getInt(
+			cursor.getColumnIndexOrThrow(EquipsEntry.COLUMN_NAME_PARTITS_EMPATATS)
+		);
 		String escutFile = cursor.getString(
 			cursor.getColumnIndexOrThrow(EquipsEntry.COLUMN_NAME_ESCUTFILE)
 		);
@@ -358,6 +376,9 @@ public class DBManager extends SQLiteOpenHelper {
 		List<Jugador> jugadors = getJugadorsEquipFromJSONString(jsonJugadorsString);
 
 		Equip equip = new Equip(nom, ciutat, jugadors);
+		equip.setPartitsGuanyats(partitsGuanyats);
+		equip.setPartitsEmpatats(partitsEmpatats);
+		equip.setPartitsPerduts(partitsPerduts);
 		equip.setEscutFile(escutFile);
 
 		return equip;
@@ -370,6 +391,9 @@ public class DBManager extends SQLiteOpenHelper {
 		String[] projection = {
 			EquipsEntry.COLUMN_NAME_NOM,
 			EquipsEntry.COLUMN_NAME_CIUTAT,
+			EquipsEntry.COLUMN_NAME_PARTITS_GUANYATS,
+			EquipsEntry.COLUMN_NAME_PARTITS_EMPATATS,
+			EquipsEntry.COLUMN_NAME_PARTITS_PERDUTS,
 			EquipsEntry.COLUMN_NAME_ESCUTFILE,
 			EquipsEntry.COLUMN_NAME_JUGADORS
 		};
@@ -431,6 +455,9 @@ public class DBManager extends SQLiteOpenHelper {
 
 		ContentValues values = new ContentValues();
 		values.put(EquipsEntry.COLUMN_NAME_CIUTAT, equip.getCiutat());
+		values.put(EquipsEntry.COLUMN_NAME_PARTITS_GUANYATS, equip.getPartitsGuanyats());
+		values.put(EquipsEntry.COLUMN_NAME_PARTITS_EMPATATS, equip.getPartitsEmpatats());
+		values.put(EquipsEntry.COLUMN_NAME_PARTITS_PERDUTS, equip.getPartitsPerduts());
 		values.put(EquipsEntry.COLUMN_NAME_ESCUTFILE, equip.getEscutFile());
 		values.put(EquipsEntry.COLUMN_NAME_JUGADORS, getJugadorsEquipAsJSONString(equip));
 
