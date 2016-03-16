@@ -10,4 +10,67 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="edu.upc.fib.idi.sergigranell.campionatdelliga.MostraPartit">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Equip local:"
+        android:id="@+id/textview_equip_local_string"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textview_equip_local"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text="&lt;equip>"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Equip visitant:"
+        android:id="@+id/textview_equip_visitant_string"
+        android:layout_below="@+id/textview_equip_local_string"
+        android:layout_alignParentStart="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="&lt;equip>"
+        android:id="@+id/textview_equip_visitant"
+        android:layout_below="@+id/textview_equip_local"
+        android:layout_alignStart="@+id/textview_equip_local"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Resultat:"
+        android:id="@+id/textview_resultat_string"
+        android:layout_below="@+id/textview_equip_visitant_string"
+        android:layout_alignParentStart="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="&lt;resultat>"
+        android:id="@+id/textview_resultat"
+        android:layout_below="@+id/textview_equip_visitant"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Data:"
+        android:id="@+id/textview_data_string"
+        android:layout_below="@+id/textview_resultat_string"
+        android:layout_alignParentStart="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="&lt;data>"
+        android:id="@+id/textview_data"
+        android:layout_below="@+id/textview_resultat"
+        android:layout_centerHorizontal="true"/>
 </RelativeLayout>

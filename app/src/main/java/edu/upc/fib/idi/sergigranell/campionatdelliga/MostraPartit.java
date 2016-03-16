@@ -2,8 +2,14 @@ package edu.upc.fib.idi.sergigranell.campionatdelliga;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.widget.TextView;
 
 public class MostraPartit extends Activity {
+
+	private TextView equipLocalTextView;
+	private TextView equipVisitantTextView;
+	private TextView resultatTextView;
+	private TextView dataTextView;
 
 	private DBManager dbmgr;
 
@@ -41,6 +47,17 @@ public class MostraPartit extends Activity {
 			partit.getVisitant().getNom() + ": " +
 			partit.getGolsLocal() + " - " +
 			partit.getGolsVisitant());
-	}
 
+		equipLocalTextView = (TextView)findViewById(R.id.textview_equip_local);
+		equipLocalTextView.setText(nomEquipLocal);
+
+		equipVisitantTextView = (TextView)findViewById(R.id.textview_equip_visitant);
+		equipVisitantTextView.setText(nomEquipVisitant);
+
+		resultatTextView = (TextView)findViewById(R.id.textview_resultat);
+		resultatTextView.setText(partit.getGolsLocal() + "-" + partit.getGolsVisitant());
+
+		dataTextView = (TextView)findViewById(R.id.textview_data);
+		dataTextView.setText(Utils.dateToString(partit.getData()));
+	}
 }
