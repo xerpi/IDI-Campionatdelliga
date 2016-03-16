@@ -44,5 +44,23 @@ public class Jugador {
 	{
 		this.tipus = tipus;
 	}
+
+	public boolean equals(Object o)
+	{
+		if (o == null || !(o instanceof Jugador))
+			return false;
+
+		Jugador other = (Jugador)o;
+		return this.nom.equals(other.nom) &&
+			this.tipus == other.tipus;
+	}
+
+	@Override
+	public int hashCode() {
+		int hash = 1;
+		hash = hash * 31 + nom.hashCode();
+		hash = hash * 31 + tipus.hashCode();
+		return hash;
+	}
 }
 

@@ -44,6 +44,7 @@ public class DBManager extends SQLiteOpenHelper {
 		public static final String COLUMN_NAME_DATA = "data";
 		public static final String COLUMN_NAME_GOLS_LOCAL = "gols_local";
 		public static final String COLUMN_NAME_GOLS_VISITANT = "gols_visitant";
+		public static final String COLUMN_NAME_LLISTA_GOLS = "llista_gols";
 	}
 
 	private static final String SQL_CREATE_JUGADORS_ENTRIES =
@@ -67,6 +68,7 @@ public class DBManager extends SQLiteOpenHelper {
 			PartitsEntry.COLUMN_NAME_DATA + " TEXT," +
 			PartitsEntry.COLUMN_NAME_GOLS_LOCAL + " INTEGER," +
 			PartitsEntry.COLUMN_NAME_GOLS_VISITANT + " INTEGER," +
+			PartitsEntry.COLUMN_NAME_LLISTA_GOLS + " TEXT," +
 			"PRIMARY KEY (" +
 				PartitsEntry.COLUMN_NAME_EQUIP_LOCAL + "," +
 				PartitsEntry.COLUMN_NAME_EQUIP_VISITANT + "," +
@@ -426,6 +428,24 @@ public class DBManager extends SQLiteOpenHelper {
 		return cursor.getCount() > 0;
 	}
 
+	private String getGolsPartitAsJSONString(Partit partit)
+	{
+		JSONObject jsonJugadors = new JSONObject();
+		try {
+			JSONArray array = new JSONArray();
+			for (Partit.Gol g: partit.getGols()) {
+				JSONObject object = new JSONObject();
+				object.put("jugador", g.getJugador().getNom());
+				object.put("minut", g.getMinut());
+				array.put(object);
+			}
+			jsonJugadors.put("llista_gols", array);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return jsonJugadors.toString();
+	}
+
 	public void insertPartit(Partit partit)
 	{
 		SQLiteDatabase db = this.getWritableDatabase();
@@ -440,7 +460,44 @@ public class DBManager extends SQLiteOpenHelper {
 			partit.getGolsLocal());
 		contentValues.put(PartitsEntry.COLUMN_NAME_GOLS_VISITANT,
 			partit.getGolsVisitant());
+		contentValues.put(PartitsEntry.COLUMN_NAME_LLISTA_GOLS,
+			getGolsPartitAsJSONString(partit));
 		db.insert(PartitsEntry.TABLE_NAME, null, contentValues);
+	}
+
+	private List<Partit.Gol> getGolsPartitFromJSONString(String llistaGolsString)
+	{
+		JSONObject jsonGols = null;
+		try {
+			jsonGols = new JSONObject(llistaGolsString);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		JSONArray golsArray = null;
+		try {
+			golsArray = jsonGols.getJSONArray("llista_gols");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		List<Partit.Gol> gols = new ArrayList<Partit.Gol>();
+		for (int i = 0; i < golsArray.length(); i++) {
+			try {
+				JSONObject golObject = golsArray.getJSONObject(i);
+
+				String nomJugador = golObject.getString("jugador");
+				int minut = golObject.getInt("minut");
+
+				Jugador jugador = this.queryJugador(nomJugador);
+
+				gols.add(new Partit.Gol(jugador, minut));
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return gols;
 	}
 
 	private Partit getPartitFromCursor(Cursor cursor)
@@ -460,12 +517,17 @@ public class DBManager extends SQLiteOpenHelper {
 		int golsVisitant = cursor.getInt(
 			cursor.getColumnIndexOrThrow(PartitsEntry.COLUMN_NAME_GOLS_VISITANT)
 		);
+		String llistaGolsString = cursor.getString(
+			cursor.getColumnIndexOrThrow(PartitsEntry.COLUMN_NAME_LLISTA_GOLS)
+		);
 
 		Equip local = this.queryEquip(nomEquipLocal);
 		Equip visitant = this.queryEquip(nomEquipVisitant);
 		Date data = Utils.stringToDate(dataString);
+		List<Partit.Gol> gols = getGolsPartitFromJSONString(llistaGolsString);
 
 		Partit partit = new Partit(local, visitant, data, golsLocal, golsVisitant);
+		partit.setGols(gols);
 
 		return partit;
 	}
@@ -479,7 +541,8 @@ public class DBManager extends SQLiteOpenHelper {
 			PartitsEntry.COLUMN_NAME_EQUIP_VISITANT,
 			PartitsEntry.COLUMN_NAME_DATA,
 			PartitsEntry.COLUMN_NAME_GOLS_LOCAL,
-			PartitsEntry.COLUMN_NAME_GOLS_VISITANT
+			PartitsEntry.COLUMN_NAME_GOLS_VISITANT,
+			PartitsEntry.COLUMN_NAME_LLISTA_GOLS
 		};
 
 		String selection = PartitsEntry.COLUMN_NAME_EQUIP_LOCAL + "=? and " +
@@ -535,6 +598,8 @@ public class DBManager extends SQLiteOpenHelper {
 			partit.getGolsLocal());
 		values.put(PartitsEntry.COLUMN_NAME_GOLS_VISITANT,
 			partit.getGolsVisitant());
+		values.put(PartitsEntry.COLUMN_NAME_LLISTA_GOLS,
+			getGolsPartitAsJSONString(partit));
 
 		String selection = PartitsEntry.COLUMN_NAME_EQUIP_LOCAL + " LIKE ? and " +
 			PartitsEntry.COLUMN_NAME_EQUIP_VISITANT + " LIKE ? and " +
@@ -559,7 +624,7 @@ public class DBManager extends SQLiteOpenHelper {
 		String[] projection = {
 			PartitsEntry.COLUMN_NAME_EQUIP_LOCAL,
 			PartitsEntry.COLUMN_NAME_EQUIP_VISITANT,
-			PartitsEntry.COLUMN_NAME_DATA,
+			PartitsEntry.COLUMN_NAME_DATA
 		};
 
 		String selection = PartitsEntry.COLUMN_NAME_EQUIP_LOCAL + "=? and " +

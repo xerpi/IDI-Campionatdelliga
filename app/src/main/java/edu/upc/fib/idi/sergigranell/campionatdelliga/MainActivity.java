@@ -76,9 +76,12 @@ public class MainActivity extends Activity {
 		p2 = new Partit(e1, e3, new Date(), 1, 2);
 		p3 = new Partit(e2, e3, new Date(), 0, 1);
 
-		/*dbmgr.insertPartit(p1);
+		p1.addGol(j1, 10);
+		p1.addGol(j3, 18);
+
+		dbmgr.insertPartit(p1);
 		dbmgr.insertPartit(p2);
-		dbmgr.insertPartit(p3);*/
+		dbmgr.insertPartit(p3);
 
 		mostraEquipsButton = (Button)findViewById(R.id.button_mostra_equips);
 		mostraEquipsButton.setOnClickListener(new View.OnClickListener() {
