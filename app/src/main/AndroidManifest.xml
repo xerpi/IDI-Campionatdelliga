@@ -34,6 +34,10 @@
             android:name=".MostraPartits"
             android:label="@string/title_activity_mostra_partits">
         </activity>
+        <activity
+            android:name=".MostraPartit"
+            android:label="@string/title_activity_mostra_partit">
+        </activity>
     </application>
 
 </manifest>
