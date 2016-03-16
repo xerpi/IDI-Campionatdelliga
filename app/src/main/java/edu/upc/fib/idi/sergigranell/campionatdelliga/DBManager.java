@@ -46,6 +46,12 @@ public class DBManager extends SQLiteOpenHelper {
 		public static final String COLUMN_NAME_LLISTA_GOLS = "llista_gols";
 	}
 
+	public static abstract class JornadesEntry {
+		public static final String TABLE_NAME = "jornades";
+		public static final String COLUMN_NAME_NUMERO = "numero";
+		public static final String COLUMN_NAME_LLISTA_PARTITS = "llista_partits";
+	}
+
 	private static final String SQL_CREATE_JUGADORS_ENTRIES =
 		"CREATE TABLE " + JugadorsEntry.TABLE_NAME + " (" +
 			JugadorsEntry.COLUMN_NAME_NOM + " TEXT PRIMARY KEY," +
@@ -75,6 +81,12 @@ public class DBManager extends SQLiteOpenHelper {
 			" )" +
 		" )";
 
+	private static final String SQL_CREATE_JORNADES_ENTRIES =
+		"CREATE TABLE " + JornadesEntry.TABLE_NAME + " (" +
+			JornadesEntry.COLUMN_NAME_NUMERO + " INTEGER PRIMARY KEY," +
+			JornadesEntry.COLUMN_NAME_LLISTA_PARTITS + " TEXT" +
+			" )";
+
 	private static final String SQL_DELETE_JUGADORS_ENTRIES =
 		"DROP TABLE IF EXISTS " + JugadorsEntry.TABLE_NAME;
 
@@ -83,6 +95,9 @@ public class DBManager extends SQLiteOpenHelper {
 
 	private static final String SQL_DELETE_PARTITS_ENTRIES =
 		"DROP TABLE IF EXISTS " + PartitsEntry.TABLE_NAME;
+
+	private static final String SQL_DELETE_JORNADES_ENTRIES =
+		"DROP TABLE IF EXISTS " + JornadesEntry.TABLE_NAME;
 
 	public DBManager(Context context)
 	{
@@ -95,6 +110,7 @@ public class DBManager extends SQLiteOpenHelper {
 		db.execSQL(SQL_CREATE_JUGADORS_ENTRIES);
 		db.execSQL(SQL_CREATE_EQUIPS_ENTRIES);
 		db.execSQL(SQL_CREATE_PARTITS_ENTRIES);
+		db.execSQL(SQL_CREATE_JORNADES_ENTRIES);
 	}
 
 	@Override
@@ -103,6 +119,7 @@ public class DBManager extends SQLiteOpenHelper {
 		db.execSQL(SQL_DELETE_JUGADORS_ENTRIES);
 		db.execSQL(SQL_DELETE_EQUIPS_ENTRIES);
 		db.execSQL(SQL_DELETE_PARTITS_ENTRIES);
+		db.execSQL(SQL_DELETE_JORNADES_ENTRIES);
 		onCreate(db);
 	}
 
@@ -118,6 +135,7 @@ public class DBManager extends SQLiteOpenHelper {
 		db.execSQL(SQL_DELETE_JUGADORS_ENTRIES);
 		db.execSQL(SQL_DELETE_EQUIPS_ENTRIES);
 		db.execSQL(SQL_DELETE_PARTITS_ENTRIES);
+		db.execSQL(SQL_DELETE_JORNADES_ENTRIES);
 	}
 
 	public void insertJugador(Jugador jugador)
@@ -635,6 +653,190 @@ public class DBManager extends SQLiteOpenHelper {
 
 		Cursor cursor = db.query(
 			PartitsEntry.TABLE_NAME,  // The table to query
+			projection,                // The columns to return
+			selection,                 // The columns for the WHERE clause
+			selectionArgs,             // The values for the WHERE clause
+			null,                      // don't group the rows
+			null,                      // don't filter by row groups
+			null                  // The sort order
+		);
+
+		if (cursor == null)
+			return false;
+
+		return cursor.getCount() > 0;
+	}
+
+	private String getPartitsJornadaAsJSONString(Jornada jornada)
+	{
+		JSONObject jsonPartits = new JSONObject();
+		try {
+			JSONArray array = new JSONArray();
+			for (Partit p: jornada.getPartits()) {
+				JSONObject jsonPartit = new JSONObject();
+
+				jsonPartit.put("equip_local", p.getLocal().getNom());
+				jsonPartit.put("equip_visitant", p.getVisitant().getNom());
+				jsonPartit.put("data", Utils.dateToString(p.getData()));
+
+				array.put(jsonPartit);
+			}
+			jsonPartits.put("llista_partits", array);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return jsonPartits.toString();
+	}
+
+	public void insertJornada(Jornada jornada)
+	{
+		SQLiteDatabase db = this.getWritableDatabase();
+		ContentValues contentValues = new ContentValues();
+		contentValues.put(JornadesEntry.COLUMN_NAME_NUMERO, jornada.getNumero());
+		contentValues.put(JornadesEntry.COLUMN_NAME_LLISTA_PARTITS,
+			getPartitsJornadaAsJSONString(jornada));
+		db.insert(JornadesEntry.TABLE_NAME, null, contentValues);
+	}
+
+	private List<Partit> getPartitsJornadaFromJSONString(String llistaPartitsString)
+	{
+		JSONObject jsonGols = null;
+		try {
+			jsonGols = new JSONObject(llistaPartitsString);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		JSONArray partitsArray = null;
+		try {
+			partitsArray = jsonGols.getJSONArray("llista_partits");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		List<Partit> partits = new ArrayList<Partit>();
+		for (int i = 0; i < partitsArray.length(); i++) {
+			try {
+				JSONObject golObject = partitsArray.getJSONObject(i);
+
+				String nomEquipLocal = golObject.getString("equip_local");
+				String nomEquipVisitant = golObject.getString("equip_visitant");
+				String dataString = golObject.getString("data");
+
+				Partit partit = this.queryPartit(nomEquipLocal,
+					nomEquipVisitant, dataString);
+
+				partits.add(partit);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return partits;
+	}
+
+	private Jornada getJornadaFromCursor(Cursor cursor)
+	{
+		int numero = cursor.getInt(
+			cursor.getColumnIndexOrThrow(JornadesEntry.COLUMN_NAME_NUMERO)
+		);
+		String llistaPartitsString = cursor.getString(
+			cursor.getColumnIndexOrThrow(JornadesEntry.COLUMN_NAME_LLISTA_PARTITS)
+		);
+
+		List<Partit> partits = getPartitsJornadaFromJSONString(llistaPartitsString);
+
+		Jornada jornada = new Jornada(partits, numero);
+		return jornada;
+	}
+
+	public Jornada queryJornada(int numero)
+	{
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		String[] projection = {
+			JornadesEntry.COLUMN_NAME_NUMERO,
+			JornadesEntry.COLUMN_NAME_LLISTA_PARTITS
+		};
+
+		String selection = JornadesEntry.COLUMN_NAME_NUMERO + "=?";
+		String[] selectionArgs = {
+			Integer.toString(numero)
+		};
+		String sortOrder = JornadesEntry.COLUMN_NAME_NUMERO + " DESC";
+
+		Cursor cursor = db.query(
+			JornadesEntry.TABLE_NAME,  // The table to query
+			projection,                // The columns to return
+			selection,                 // The columns for the WHERE clause
+			selectionArgs,             // The values for the WHERE clause
+			null,                      // don't group the rows
+			null,                      // don't filter by row groups
+			sortOrder                  // The sort order
+		);
+
+		if (cursor == null)
+			return null;
+
+		cursor.moveToFirst();
+
+		return getJornadaFromCursor(cursor);
+	}
+
+	public List<Jornada> queryAllJornades()
+	{
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		Cursor cursor = db.query(JornadesEntry.TABLE_NAME,
+			null, null, null, null, null, null);
+
+		if (cursor == null)
+			return null;
+
+		List<Jornada> llistaJornades = new ArrayList<Jornada>();
+
+		while (cursor.moveToNext()) {
+			llistaJornades.add(getJornadaFromCursor(cursor));
+		}
+
+		return llistaJornades;
+	}
+
+	public void updateJornada(Jornada jornada)
+	{
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		ContentValues values = new ContentValues();
+		values.put(JornadesEntry.COLUMN_NAME_LLISTA_PARTITS,
+			getPartitsJornadaAsJSONString(jornada));
+
+		String selection = JornadesEntry.COLUMN_NAME_NUMERO + " LIKE ?";
+		String[] selectionArgs = {
+			Integer.toString(jornada.getNumero())
+		};
+
+		int count = db.update(
+			JornadesEntry.TABLE_NAME,
+			values,
+			selection,
+			selectionArgs);
+	}
+
+	public boolean existsJornada(int numero)
+	{
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		String[] projection = {
+			JornadesEntry.COLUMN_NAME_NUMERO
+		};
+
+		String selection = JornadesEntry.COLUMN_NAME_NUMERO + "=?";
+		String[] selectionArgs = {
+			Integer.toString(numero)
+		};
+
+		Cursor cursor = db.query(
+			JornadesEntry.TABLE_NAME,  // The table to query
 			projection,                // The columns to return
 			selection,                 // The columns for the WHERE clause
 			selectionArgs,             // The values for the WHERE clause

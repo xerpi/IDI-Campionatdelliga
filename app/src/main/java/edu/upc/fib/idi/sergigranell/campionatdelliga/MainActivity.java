@@ -8,8 +8,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.List;
 
 
 public class MainActivity extends Activity {
@@ -18,6 +20,7 @@ public class MainActivity extends Activity {
 	private Button mostraPartitsButton;
 	private Equip e1, e2, e3;
 	private Partit p1, p2, p3;
+	private Jornada jornada1, jornada2;
 	private Hashtable<String, Equip> equipsHashTable;
 	private DBManager dbmgr;
 
@@ -79,6 +82,19 @@ public class MainActivity extends Activity {
 		dbmgr.insertPartit(p1);
 		dbmgr.insertPartit(p2);
 		dbmgr.insertPartit(p3);
+
+		List<Partit> partitsJ1 = new ArrayList<Partit>();
+		List<Partit> partitsJ2 = new ArrayList<Partit>();
+
+		partitsJ1.add(p1);
+		partitsJ1.add(p2);
+		partitsJ2.add(p3);
+
+		jornada1 = new Jornada(partitsJ1, 1);
+		jornada2 = new Jornada(partitsJ2, 2);
+
+		dbmgr.insertJornada(jornada1);
+		dbmgr.insertJornada(jornada2);
 
 		mostraEquipsButton = (Button)findViewById(R.id.button_mostra_equips);
 		mostraEquipsButton.setOnClickListener(new View.OnClickListener() {
