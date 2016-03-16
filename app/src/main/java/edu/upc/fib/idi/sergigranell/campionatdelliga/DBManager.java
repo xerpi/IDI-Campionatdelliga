@@ -277,6 +277,11 @@ public class DBManager extends SQLiteOpenHelper {
 		return count > 0;
 	}
 
+	public boolean existsJugador(Jugador jugador)
+	{
+		return existsJugador(jugador.getNom());
+	}
+
 	private String getJugadorsEquipAsJSONString(Equip equip)
 	{
 		JSONObject jsonJugadors = new JSONObject();
@@ -475,6 +480,11 @@ public class DBManager extends SQLiteOpenHelper {
 		db.close();
 
 		return count > 0;
+	}
+
+	public boolean existsEquip(Equip equip)
+	{
+		return existsEquip(equip.getNom());
 	}
 
 	private String getGolsPartitAsJSONString(Partit partit)
@@ -715,6 +725,12 @@ public class DBManager extends SQLiteOpenHelper {
 		return count > 0;
 	}
 
+	public boolean existsPartit(Partit partit)
+	{
+		return existsPartit(partit.getLocal().getNom(), partit.getVisitant().getNom(),
+			Utils.dateToString(partit.getData()));
+	}
+
 	private String getPartitsJornadaAsJSONString(Jornada jornada)
 	{
 		JSONObject jsonPartits = new JSONObject();
@@ -913,5 +929,10 @@ public class DBManager extends SQLiteOpenHelper {
 		db.close();
 
 		return count > 0;
+	}
+
+	public boolean existsJornada(Jornada jornada)
+	{
+		return existsJornada(jornada.getNumero());
 	}
 }

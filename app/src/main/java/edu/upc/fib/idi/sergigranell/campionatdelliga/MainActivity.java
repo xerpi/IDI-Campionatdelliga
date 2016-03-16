@@ -52,11 +52,11 @@ public class MainActivity extends Activity {
 		dbmgr = new DBManager(this);
 		//dbmgr.dropTables();
 
-		if (!dbmgr.existsJugador(j1.getNom()))
+		if (!dbmgr.existsJugador(j1))
 			dbmgr.insertJugador(j1);
-		if (!dbmgr.existsJugador(j2.getNom()))
+		if (!dbmgr.existsJugador(j2))
 			dbmgr.insertJugador(j2);
-		if (!dbmgr.existsJugador(j3.getNom()))
+		if (!dbmgr.existsJugador(j3))
 			dbmgr.insertJugador(j3);
 
 		e1.addJugador(j1);
@@ -69,11 +69,11 @@ public class MainActivity extends Activity {
 		e3.addJugador(j2);
 		e3.addJugador(j3);
 
-		if (!dbmgr.existsEquip(e1.getNom()))
+		if (!dbmgr.existsEquip(e1))
 			dbmgr.insertEquip(e1);
-		if (!dbmgr.existsEquip(e2.getNom()))
+		if (!dbmgr.existsEquip(e2))
 			dbmgr.insertEquip(e2);
-		if (!dbmgr.existsEquip(e3.getNom()))
+		if (!dbmgr.existsEquip(e3))
 			dbmgr.insertEquip(e3);
 
 		GregorianCalendar gc = new GregorianCalendar(2016, 1, 1);
@@ -86,14 +86,11 @@ public class MainActivity extends Activity {
 		p1.addGol(j1, 10);
 		p1.addGol(j3, 18);
 
-		if (!dbmgr.existsPartit(p1.getLocal().getNom(), p1.getVisitant().getNom(),
-			Utils.dateToString(p1.getData())))
+		if (!dbmgr.existsPartit(p1))
 			dbmgr.insertPartit(p1);
-		if (!dbmgr.existsPartit(p2.getLocal().getNom(), p2.getVisitant().getNom(),
-			Utils.dateToString(p2.getData())))
+		if (!dbmgr.existsPartit(p2))
 			dbmgr.insertPartit(p2);
-		if (!dbmgr.existsPartit(p3.getLocal().getNom(), p3.getVisitant().getNom(),
-			Utils.dateToString(p3.getData())))
+		if (!dbmgr.existsPartit(p3))
 			dbmgr.insertPartit(p3);
 
 		List<Partit> partitsJ1 = new ArrayList<Partit>();
@@ -106,9 +103,9 @@ public class MainActivity extends Activity {
 		jornada1 = new Jornada(partitsJ1, 1);
 		jornada2 = new Jornada(partitsJ2, 2);
 
-		if (!dbmgr.existsJornada(jornada1.getNumero()))
+		if (!dbmgr.existsJornada(jornada1))
 			dbmgr.insertJornada(jornada1);
-		if (!dbmgr.existsJornada(jornada2.getNumero()))
+		if (!dbmgr.existsJornada(jornada2))
 			dbmgr.insertJornada(jornada2);
 
 		mostraEquipsButton = (Button)findViewById(R.id.button_mostra_equips);
