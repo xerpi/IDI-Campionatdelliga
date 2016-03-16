@@ -470,15 +470,6 @@ public class DBManager extends SQLiteOpenHelper {
 		return partit;
 	}
 
-		/*
-		public static final String TABLE_NAME = "partits";
-		public static final String COLUMN_NAME_EQUIP_LOCAL = "equip_local";
-		public static final String COLUMN_NAME_EQUIP_VISITANT = "equip_visitant";
-		public static final String COLUMN_NAME_DATA = "data";
-		public static final String COLUMN_NAME_GOLS_LOCAL = "gols_local";
-		public static final String COLUMN_NAME_GOLS_VISITANT = "gols_visitant";
-	 */
-
 	public Partit queryPartit(String equipLocal, String equipVisitant, String data)
 	{
 		SQLiteDatabase db = this.getReadableDatabase();
@@ -491,10 +482,9 @@ public class DBManager extends SQLiteOpenHelper {
 			PartitsEntry.COLUMN_NAME_GOLS_VISITANT
 		};
 
-		String selection = PartitsEntry.COLUMN_NAME_EQUIP_LOCAL + "," +
-			PartitsEntry.COLUMN_NAME_EQUIP_VISITANT + "," +
-			PartitsEntry.COLUMN_NAME_DATA +
-			"=(?, ?, ?)";
+		String selection = PartitsEntry.COLUMN_NAME_EQUIP_LOCAL + "=? and " +
+			PartitsEntry.COLUMN_NAME_EQUIP_VISITANT + "=? and " +
+			PartitsEntry.COLUMN_NAME_DATA + "=?";
 		String[] selectionArgs = {
 			equipLocal, equipVisitant, data
 		};
@@ -538,34 +528,45 @@ public class DBManager extends SQLiteOpenHelper {
 
 	public void updatePartit(Partit partit)
 	{
-		/*SQLiteDatabase db = this.getReadableDatabase();
+		SQLiteDatabase db = this.getReadableDatabase();
 
 		ContentValues values = new ContentValues();
-		values.put(PartitsEntry.COLUMN_NAME_TIPUS, partit.getTipus().toString());
+		values.put(PartitsEntry.COLUMN_NAME_GOLS_LOCAL,
+			partit.getGolsLocal());
+		values.put(PartitsEntry.COLUMN_NAME_GOLS_VISITANT,
+			partit.getGolsVisitant());
 
-		String selection = PartitsEntry.COLUMN_NAME_NOM + " LIKE ?";
+		String selection = PartitsEntry.COLUMN_NAME_EQUIP_LOCAL + " LIKE ? and " +
+			PartitsEntry.COLUMN_NAME_EQUIP_VISITANT + " LIKE ? and " +
+			PartitsEntry.COLUMN_NAME_DATA + " LIKE ?";
+
 		String[] selectionArgs = {
-			partit.getNom()
+			partit.getLocal().getNom(), partit.getVisitant().getNom(),
+			Utils.dateToString(partit.getData())
 		};
 
 		int count = db.update(
 			PartitsEntry.TABLE_NAME,
 			values,
 			selection,
-			selectionArgs);*/
+			selectionArgs);
 	}
 
-	public boolean existsPartit(String nomPartit)
+	public boolean existsPartit(String equipLocal, String equipVisitant, String data)
 	{
-		/*SQLiteDatabase db = this.getReadableDatabase();
+		SQLiteDatabase db = this.getReadableDatabase();
 
 		String[] projection = {
-			PartitsEntry.COLUMN_NAME_NOM
+			PartitsEntry.COLUMN_NAME_EQUIP_LOCAL,
+			PartitsEntry.COLUMN_NAME_EQUIP_VISITANT,
+			PartitsEntry.COLUMN_NAME_DATA,
 		};
 
-		String selection = PartitsEntry.COLUMN_NAME_NOM + "=?";
+		String selection = PartitsEntry.COLUMN_NAME_EQUIP_LOCAL + "=? and " +
+			PartitsEntry.COLUMN_NAME_EQUIP_VISITANT + "=? and " +
+			PartitsEntry.COLUMN_NAME_DATA + "=?";
 		String[] selectionArgs = {
-			nomPartit
+			equipLocal, equipVisitant, data
 		};
 
 		Cursor cursor = db.query(
@@ -581,7 +582,6 @@ public class DBManager extends SQLiteOpenHelper {
 		if (cursor == null)
 			return false;
 
-		return cursor.getCount() > 0;*/
-		return false;
+		return cursor.getCount() > 0;
 	}
 }
