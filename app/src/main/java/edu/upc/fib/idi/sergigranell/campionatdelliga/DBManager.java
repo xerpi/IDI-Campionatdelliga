@@ -145,6 +145,7 @@ public class DBManager extends SQLiteOpenHelper {
 		contentValues.put(JugadorsEntry.COLUMN_NAME_NOM, jugador.getNom());
 		contentValues.put(JugadorsEntry.COLUMN_NAME_TIPUS, jugador.getTipus().toString());
 		db.insert(JugadorsEntry.TABLE_NAME, null, contentValues);
+		db.close();
 	}
 
 	private Jugador getJugadorFromCursor(Cursor cursor)
@@ -191,7 +192,12 @@ public class DBManager extends SQLiteOpenHelper {
 
 		cursor.moveToFirst();
 
-		return getJugadorFromCursor(cursor);
+		Jugador jugador = getJugadorFromCursor(cursor);
+
+		cursor.close();
+		db.close();
+
+		return jugador;
 	}
 
 	public List<Jugador> queryAllJugadors()
@@ -209,6 +215,9 @@ public class DBManager extends SQLiteOpenHelper {
 		while (cursor.moveToNext()) {
 			llistaJugadors.add(getJugadorFromCursor(cursor));
 		}
+
+		cursor.close();
+		db.close();
 
 		return llistaJugadors;
 	}
@@ -230,6 +239,8 @@ public class DBManager extends SQLiteOpenHelper {
 			values,
 			selection,
 			selectionArgs);
+
+		db.close();
 	}
 
 	public boolean existsJugador(String nomJugador)
@@ -258,7 +269,12 @@ public class DBManager extends SQLiteOpenHelper {
 		if (cursor == null)
 			return false;
 
-		return cursor.getCount() > 0;
+		int count = cursor.getCount();
+
+		cursor.close();
+		db.close();
+
+		return count > 0;
 	}
 
 	private String getJugadorsEquipAsJSONString(Equip equip)
@@ -287,6 +303,7 @@ public class DBManager extends SQLiteOpenHelper {
 		contentValues.put(EquipsEntry.COLUMN_NAME_ESCUTFILE, equip.getEscutFile());
 		contentValues.put(EquipsEntry.COLUMN_NAME_JUGADORS, jsonJugadorsString);
 		db.insert(EquipsEntry.TABLE_NAME, null, contentValues);
+		db.close();
 	}
 
 	private List<Jugador> getJugadorsEquipFromJSONString(String jsonJugadorsString)
@@ -373,7 +390,12 @@ public class DBManager extends SQLiteOpenHelper {
 
 		cursor.moveToFirst();
 
-		return getEquipFromCursor(cursor);
+		Equip equip = getEquipFromCursor(cursor);
+
+		cursor.close();
+		db.close();
+
+		return equip;
 	}
 
 	public List<Equip> queryAllEquips()
@@ -391,6 +413,9 @@ public class DBManager extends SQLiteOpenHelper {
 		while (cursor.moveToNext()) {
 			llistaEquips.add(getEquipFromCursor(cursor));
 		}
+
+		cursor.close();
+		db.close();
 
 		return llistaEquips;
 	}
@@ -414,6 +439,8 @@ public class DBManager extends SQLiteOpenHelper {
 			values,
 			selection,
 			selectionArgs);
+
+		db.close();
 	}
 
 	public boolean existsEquip(String nomEquip)
@@ -442,7 +469,12 @@ public class DBManager extends SQLiteOpenHelper {
 		if (cursor == null)
 			return false;
 
-		return cursor.getCount() > 0;
+		int count = cursor.getCount();
+
+		cursor.close();
+		db.close();
+
+		return count > 0;
 	}
 
 	private String getGolsPartitAsJSONString(Partit partit)
@@ -480,6 +512,7 @@ public class DBManager extends SQLiteOpenHelper {
 		contentValues.put(PartitsEntry.COLUMN_NAME_LLISTA_GOLS,
 			getGolsPartitAsJSONString(partit));
 		db.insert(PartitsEntry.TABLE_NAME, null, contentValues);
+		db.close();
 	}
 
 	private List<Partit.Gol> getGolsPartitFromJSONString(String llistaGolsString)
@@ -584,7 +617,12 @@ public class DBManager extends SQLiteOpenHelper {
 
 		cursor.moveToFirst();
 
-		return getPartitFromCursor(cursor);
+		Partit partit = getPartitFromCursor(cursor);
+
+		cursor.close();
+		db.close();
+
+		return partit;
 	}
 
 	public List<Partit> queryAllPartits()
@@ -602,6 +640,9 @@ public class DBManager extends SQLiteOpenHelper {
 		while (cursor.moveToNext()) {
 			llistaPartits.add(getPartitFromCursor(cursor));
 		}
+
+		cursor.close();
+		db.close();
 
 		return llistaPartits;
 	}
@@ -632,6 +673,8 @@ public class DBManager extends SQLiteOpenHelper {
 			values,
 			selection,
 			selectionArgs);
+
+		db.close();
 	}
 
 	public boolean existsPartit(String equipLocal, String equipVisitant, String data)
@@ -664,7 +707,12 @@ public class DBManager extends SQLiteOpenHelper {
 		if (cursor == null)
 			return false;
 
-		return cursor.getCount() > 0;
+		int count = cursor.getCount();
+
+		cursor.close();
+		db.close();
+
+		return count > 0;
 	}
 
 	private String getPartitsJornadaAsJSONString(Jornada jornada)
@@ -696,6 +744,7 @@ public class DBManager extends SQLiteOpenHelper {
 		contentValues.put(JornadesEntry.COLUMN_NAME_LLISTA_PARTITS,
 			getPartitsJornadaAsJSONString(jornada));
 		db.insert(JornadesEntry.TABLE_NAME, null, contentValues);
+		db.close();
 	}
 
 	private List<Partit> getPartitsJornadaFromJSONString(String llistaPartitsString)
@@ -780,7 +829,12 @@ public class DBManager extends SQLiteOpenHelper {
 
 		cursor.moveToFirst();
 
-		return getJornadaFromCursor(cursor);
+		Jornada jornada = getJornadaFromCursor(cursor);
+
+		cursor.close();
+		db.close();
+
+		return jornada;
 	}
 
 	public List<Jornada> queryAllJornades()
@@ -798,6 +852,9 @@ public class DBManager extends SQLiteOpenHelper {
 		while (cursor.moveToNext()) {
 			llistaJornades.add(getJornadaFromCursor(cursor));
 		}
+
+		cursor.close();
+		db.close();
 
 		return llistaJornades;
 	}
@@ -820,6 +877,8 @@ public class DBManager extends SQLiteOpenHelper {
 			values,
 			selection,
 			selectionArgs);
+
+		db.close();
 	}
 
 	public boolean existsJornada(int numero)
@@ -848,6 +907,11 @@ public class DBManager extends SQLiteOpenHelper {
 		if (cursor == null)
 			return false;
 
-		return cursor.getCount() > 0;
+		int count = cursor.getCount();
+
+		cursor.close();
+		db.close();
+
+		return count > 0;
 	}
 }

@@ -10,6 +10,7 @@ import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -75,16 +76,25 @@ public class MainActivity extends Activity {
 		if (!dbmgr.existsEquip(e3.getNom()))
 			dbmgr.insertEquip(e3);
 
-		p1 = new Partit(e1, e2, new Date(), 0, 2);
-		p2 = new Partit(e1, e3, new Date(), 1, 2);
-		p3 = new Partit(e2, e3, new Date(), 0, 1);
+		GregorianCalendar gc = new GregorianCalendar(2016, 1, 1);
+		Date date = gc.getTime();
+
+		p1 = new Partit(e1, e2, date, 0, 2);
+		p2 = new Partit(e1, e3, date, 1, 2);
+		p3 = new Partit(e2, e3, date, 0, 1);
 
 		p1.addGol(j1, 10);
 		p1.addGol(j3, 18);
 
-		dbmgr.insertPartit(p1);
-		dbmgr.insertPartit(p2);
-		dbmgr.insertPartit(p3);
+		if (!dbmgr.existsPartit(p1.getLocal().getNom(), p1.getVisitant().getNom(),
+			Utils.dateToString(p1.getData())))
+			dbmgr.insertPartit(p1);
+		if (!dbmgr.existsPartit(p2.getLocal().getNom(), p2.getVisitant().getNom(),
+			Utils.dateToString(p2.getData())))
+			dbmgr.insertPartit(p2);
+		if (!dbmgr.existsPartit(p3.getLocal().getNom(), p3.getVisitant().getNom(),
+			Utils.dateToString(p3.getData())))
+			dbmgr.insertPartit(p3);
 
 		List<Partit> partitsJ1 = new ArrayList<Partit>();
 		List<Partit> partitsJ2 = new ArrayList<Partit>();
@@ -96,8 +106,10 @@ public class MainActivity extends Activity {
 		jornada1 = new Jornada(partitsJ1, 1);
 		jornada2 = new Jornada(partitsJ2, 2);
 
-		dbmgr.insertJornada(jornada1);
-		dbmgr.insertJornada(jornada2);
+		if (!dbmgr.existsJornada(jornada1.getNumero()))
+			dbmgr.insertJornada(jornada1);
+		if (!dbmgr.existsJornada(jornada2.getNumero()))
+			dbmgr.insertJornada(jornada2);
 
 		mostraEquipsButton = (Button)findViewById(R.id.button_mostra_equips);
 		mostraEquipsButton.setOnClickListener(new View.OnClickListener() {
