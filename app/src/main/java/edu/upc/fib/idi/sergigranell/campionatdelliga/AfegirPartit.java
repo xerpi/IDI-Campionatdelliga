@@ -120,6 +120,7 @@ public class AfegirPartit extends Activity {
 				Partit nouPartit = new Partit(equipLocal, equipvisitant, new Date());
 
 				dbmgr.insertPartit(nouPartit);
+				nouPartit.updatePuntsEquips(dbmgr);
 
 				int numeroJornada = arrayListJornada.get(jornadaPos);
 

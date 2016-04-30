@@ -20,6 +20,7 @@ public class MainActivity extends Activity {
 	private Button mostraEquipsButton;
 	private Button mostraPartitsButton;
 	private Button mostraJornadesButton;
+	private Button mostraClassificacioButton;
 
 	private DBManager dbmgr;
 
@@ -86,12 +87,18 @@ public class MainActivity extends Activity {
 		p1.addGol(j1, 10);
 		p1.addGol(j3, 18);
 
-		if (!dbmgr.existsPartit(p1))
+		if (!dbmgr.existsPartit(p1)) {
 			dbmgr.insertPartit(p1);
-		if (!dbmgr.existsPartit(p2))
+			p1.updatePuntsEquips(dbmgr);
+		}
+		if (!dbmgr.existsPartit(p2)) {
 			dbmgr.insertPartit(p2);
-		if (!dbmgr.existsPartit(p3))
+			p2.updatePuntsEquips(dbmgr);
+		}
+		if (!dbmgr.existsPartit(p3)) {
 			dbmgr.insertPartit(p3);
+			p3.updatePuntsEquips(dbmgr);
+		}
 
 		List<Partit> partitsJ1 = new ArrayList<Partit>();
 		List<Partit> partitsJ2 = new ArrayList<Partit>();
@@ -138,6 +145,17 @@ public class MainActivity extends Activity {
 				Intent mostraJornadesIntent = new Intent(MainActivity.this,
 					MostraJornades.class);
 				startActivity(mostraJornadesIntent);
+			}
+		});
+
+		mostraClassificacioButton = (Button)findViewById(R.id.button_mostra_classificacio);
+		mostraClassificacioButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v)
+			{
+				Intent mostraClassificacioIntent = new Intent(MainActivity.this,
+					MostraClassificacioPuntsEquips.class);
+				startActivity(mostraClassificacioIntent);
 			}
 		});
 	}

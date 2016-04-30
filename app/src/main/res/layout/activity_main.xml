@@ -31,4 +31,12 @@
         android:id="@+id/button_mostra_jornades"
         android:layout_below="@+id/button_mostra_partits"
         android:layout_alignParentStart="true"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mostra classificació"
+        android:id="@+id/button_mostra_classificacio"
+        android:layout_below="@+id/button_mostra_jornades"
+        android:layout_alignParentStart="true"/>
 </RelativeLayout>

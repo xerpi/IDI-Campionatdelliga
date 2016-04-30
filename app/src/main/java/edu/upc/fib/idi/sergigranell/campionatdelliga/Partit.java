@@ -152,4 +152,21 @@ public class Partit {
 		if (!gols.contains(gol))
 			gols.add(gol);
 	}
+
+	public void updatePuntsEquips(DBManager dbmgr)
+	{
+		if (golsLocal > golsVisitant) {
+			local.setPartitsGuanyats(local.getPartitsGuanyats() + 1);
+			visitant.setPartitsPerduts(visitant.getPartitsPerduts() + 1);
+		} else if (golsLocal < golsVisitant) {
+			local.setPartitsPerduts(local.getPartitsPerduts() + 1);
+			visitant.setPartitsGuanyats(visitant.getPartitsGuanyats() + 1);
+		} else {
+			local.setPartitsEmpatats(local.getPartitsEmpatats() + 1);
+			visitant.setPartitsEmpatats(visitant.getPartitsEmpatats() + 1);
+		}
+
+		dbmgr.updateEquip(local);
+		dbmgr.updateEquip(visitant);
+	}
 }
