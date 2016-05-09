@@ -102,6 +102,8 @@
         android:id="@+id/afegir_partit_listview_gols"
         android:layout_below="@+id/afegir_partit_button_afegir_gol"
         android:layout_alignParentStart="true"
-        android:layout_above="@+id/afegir_partit_button_cancelar"/>
+        android:layout_above="@+id/afegir_partit_button_cancelar"
+        android:stackFromBottom="false"
+        android:transcriptMode="alwaysScroll"/>
 
 </RelativeLayout>

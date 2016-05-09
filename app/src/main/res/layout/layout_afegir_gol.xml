@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:weightSum="1">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Jugador:"
+            android:id="@+id/textview_jugador"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="10dp"/>
+
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinner_jugadors"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="1">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Minut:"
+            android:id="@+id/textview_minut"
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="center_vertical"/>
+
+        <NumberPicker
+            android:layout_width="wrap_content"
+            android:layout_height="89dp"
+            android:id="@+id/numberpicker_minut_gol"
+            android:paddingLeft="10dp"
+            android:layout_weight="0.32"
+            android:orientation="horizontal"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancelar"
+            android:id="@+id/button_cancelar_afegir_gol"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Acceptar"
+            android:id="@+id/button_acceptar_afegir_gol"
+            />
+    </LinearLayout>
+
+</LinearLayout>

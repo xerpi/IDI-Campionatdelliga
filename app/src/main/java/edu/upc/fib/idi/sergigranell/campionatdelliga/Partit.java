@@ -143,14 +143,28 @@ public class Partit {
 
 	public void addGol(Jugador jugador, int minut)
 	{
-		if (!getLocal().getTitulars().contains(jugador))
-			return;
-		if (!getVisitant().getTitulars().contains(jugador))
+		addGol(new Gol(jugador, minut));
+	}
+
+	public void addGol(Gol gol)
+	{
+		if (gols.contains(gol))
 			return;
 
-		Gol gol = new Gol(jugador, minut);
-		if (!gols.contains(gol))
-			gols.add(gol);
+		if (getLocal().getTitulars().contains(gol.getJugador()))
+			golsLocal++;
+		else if (getVisitant().getTitulars().contains(gol.getJugador()))
+			golsVisitant++;
+		else
+			return;
+
+		gols.add(gol);
+	}
+
+	public void addGolList(List<Gol> gols)
+	{
+		for (Gol g: gols)
+			addGol(g);
 	}
 
 	public void updatePuntsEquips(DBManager dbmgr)
