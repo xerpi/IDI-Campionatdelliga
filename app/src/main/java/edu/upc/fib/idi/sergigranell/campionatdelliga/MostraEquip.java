@@ -22,6 +22,7 @@ public class MostraEquip extends Activity {
 	private TextView partitsPerdutsTextView;
 	private TextView puntsTextView;
 	private Button mostraJugadorsButton;
+	private Button mostraEvolucioButton;
 	private ImageView escutEquipImageView;
 
 	private Equip equip;
@@ -60,6 +61,7 @@ public class MostraEquip extends Activity {
 			R.id.mostra_equip_textview_partits_perduts);
 		puntsTextView = (TextView)findViewById(R.id.mostra_equip_textview_punts);
 		mostraJugadorsButton = (Button)findViewById(R.id.button_mostra_jugadors);
+		mostraEvolucioButton = (Button)findViewById(R.id.button_mostra_evolucio);
 		escutEquipImageView = (ImageView)findViewById(R.id.imageview_escut_equip);
 
 		partitsGuanyatsTextView.setText(Integer.toString(equip.getPartitsGuanyats()));
@@ -96,6 +98,19 @@ public class MostraEquip extends Activity {
 					(ArrayList<String>)nomsJugadorsEquip);
 
 				startActivity(mostraJugadorsEquipIntent);
+			}
+		});
+
+		mostraEvolucioButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view)
+			{
+				Intent mostraEvolucioEquipIntent = new Intent(MostraEquip.this,
+					MostraEvolucioEquip.class);
+
+				mostraEvolucioEquipIntent.putExtra("Equip", equip.getNom());
+
+				startActivity(mostraEvolucioEquipIntent);
 			}
 		});
 	}

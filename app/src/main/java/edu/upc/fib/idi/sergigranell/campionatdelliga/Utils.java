@@ -8,6 +8,10 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.utils.ViewPortHandler;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -100,4 +104,13 @@ public final class Utils {
 		}
 		return null;
 	}
+
+	public static class IntegerValueFormatter implements ValueFormatter {
+		@Override
+		public String getFormattedValue(float v, Entry entry, int i, ViewPortHandler viewPortHandler)
+		{
+			return String.valueOf((int)v);
+		}
+	};
+
 }

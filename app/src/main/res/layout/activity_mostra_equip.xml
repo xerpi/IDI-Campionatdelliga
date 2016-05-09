@@ -15,101 +15,126 @@
         android:layout_height="fill_parent"
         android:id="@+id/scrollView">
 
-        <RelativeLayout
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_alignEnd="@+id/mostra_equip_textview_partits_perduts_string">
 
-            <ImageView
-                android:layout_width="256px"
-                android:layout_height="256px"
-                android:id="@+id/imageview_escut_equip"
-                android:src="@android:drawable/ic_menu_gallery"
-                android:layout_alignParentTop="true"
-                android:layout_toEndOf="@+id/mostra_equip_textview_partits_guanyats_string"/>
-
-            <TextView
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Escut"
-                android:id="@+id/mostra_equip_textview_escut_string"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignBottom="@+id/imageview_escut_equip"
-                android:gravity="center_vertical"/>
+                >
 
-            <TextView
-                android:layout_width="wrap_content"
+                <ImageView
+                    android:layout_width="256px"
+                    android:layout_height="256px"
+                    android:id="@+id/imageview_escut_equip"
+                    android:src="@android:drawable/ic_menu_gallery"
+                    android:layout_alignParentTop="true"
+                    android:layout_toEndOf="@+id/mostra_equip_textview_partits_guanyats_string"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Escut"
+                    android:id="@+id/mostra_equip_textview_escut_string"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignBottom="@+id/imageview_escut_equip"
+                    android:gravity="center_vertical"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Partits guanyats"
+                    android:id="@+id/mostra_equip_textview_partits_guanyats_string"
+                    android:layout_below="@+id/imageview_escut_equip"
+                    android:layout_alignParentStart="true"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Partits empatats"
+                    android:id="@+id/mostra_equip_textview_partits_empatats_string"
+                    android:layout_below="@+id/mostra_equip_textview_partits_guanyats_string"
+                    android:layout_alignParentStart="true"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Partits perduts"
+                    android:id="@+id/mostra_equip_textview_partits_perduts_string"
+                    android:layout_below="@+id/mostra_equip_textview_partits_empatats_string"
+                    android:layout_alignParentStart="true"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Punts"
+                    android:id="@+id/mostra_equip_textview_partits_punts_string"
+                    android:layout_below="@+id/mostra_equip_textview_partits_perduts_string"
+                    android:layout_alignParentStart="true"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:id="@+id/mostra_equip_textview_partits_guanyats"
+                    android:layout_above="@+id/mostra_equip_textview_partits_empatats_string"
+                    android:layout_alignStart="@+id/mostra_equip_textview_partits_empatats"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:id="@+id/mostra_equip_textview_partits_empatats"
+                    android:layout_below="@+id/mostra_equip_textview_partits_guanyats"
+                    android:layout_centerHorizontal="true"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:id="@+id/mostra_equip_textview_partits_perduts"
+                    android:layout_above="@+id/mostra_equip_textview_partits_punts_string"
+                    android:layout_centerHorizontal="true"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:id="@+id/mostra_equip_textview_punts"
+                    android:layout_below="@+id/mostra_equip_textview_partits_perduts"
+                    android:layout_centerHorizontal="true"/>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Partits guanyats"
-                android:id="@+id/mostra_equip_textview_partits_guanyats_string"
-                android:layout_below="@+id/imageview_escut_equip"
-                android:layout_alignParentStart="true"/>
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Partits empatats"
-                android:id="@+id/mostra_equip_textview_partits_empatats_string"
-                android:layout_below="@+id/mostra_equip_textview_partits_guanyats_string"
-                android:layout_alignParentStart="true"/>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mostra jugadors"
+                    android:id="@+id/button_mostra_jugadors"
+                    android:layout_below="@+id/mostra_equip_textview_partits_punts_string"
+                    android:layout_alignParentStart="true"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Partits perduts"
-                android:id="@+id/mostra_equip_textview_partits_perduts_string"
-                android:layout_below="@+id/mostra_equip_textview_partits_empatats_string"
-                android:layout_alignParentStart="true"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Punts"
-                android:id="@+id/mostra_equip_textview_partits_punts_string"
-                android:layout_below="@+id/mostra_equip_textview_partits_perduts_string"
-                android:layout_alignParentStart="true"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0"
-                android:id="@+id/mostra_equip_textview_partits_guanyats"
-                android:layout_above="@+id/mostra_equip_textview_partits_empatats_string"
-                android:layout_alignStart="@+id/mostra_equip_textview_partits_empatats"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0"
-                android:id="@+id/mostra_equip_textview_partits_empatats"
-                android:layout_below="@+id/mostra_equip_textview_partits_guanyats"
-                android:layout_centerHorizontal="true"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0"
-                android:id="@+id/mostra_equip_textview_partits_perduts"
-                android:layout_above="@+id/mostra_equip_textview_partits_punts_string"
-                android:layout_centerHorizontal="true"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0"
-                android:id="@+id/mostra_equip_textview_punts"
-                android:layout_below="@+id/mostra_equip_textview_partits_perduts"
-                android:layout_centerHorizontal="true"/>
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Mostra jugadors"
-                android:id="@+id/button_mostra_jugadors"
-                android:layout_below="@+id/mostra_equip_textview_partits_punts_string"
-                android:layout_alignParentStart="true"/>
-
-        </RelativeLayout>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mostra Evolució"
+                    android:id="@+id/button_mostra_evolucio"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentStart="true"/>
+            </LinearLayout>
+        </LinearLayout>
     </ScrollView>
 
 </RelativeLayout>

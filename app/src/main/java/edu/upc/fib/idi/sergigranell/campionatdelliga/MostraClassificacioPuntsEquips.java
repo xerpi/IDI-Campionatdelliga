@@ -21,8 +21,8 @@ import java.util.List;
 
 public class MostraClassificacioPuntsEquips extends Activity {
 
-	private BarChart barChart;
 	private DBManager dbmgr;
+	private BarChart barChart;
 	private List<Equip> equips;
 
 	private ArrayList<BarEntry> puntsEquips;
@@ -58,13 +58,7 @@ public class MostraClassificacioPuntsEquips extends Activity {
 		BarDataSet dataSetPuntsEquips = new BarDataSet(puntsEquips, null);
 		BarData data = new BarData(nomsEquips, dataSetPuntsEquips);
 
-		dataSetPuntsEquips.setValueFormatter(new ValueFormatter() {
-			@Override
-			public String getFormattedValue(float v, Entry entry, int i, ViewPortHandler viewPortHandler)
-			{
-				return String.valueOf((int)v);
-			}
-		});
+		dataSetPuntsEquips.setValueFormatter(new Utils.IntegerValueFormatter());
 
 		barChart = (BarChart)findViewById(R.id.barchart_classificacio);
 		barChart.setData(data);

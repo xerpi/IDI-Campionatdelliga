@@ -153,5 +153,15 @@ public class Equip {
 		else
 			Log.i("info", "removeJugador: Tipus invalid de jugador");
 	}
+
+	@Override
+	public boolean equals(Object o)
+	{
+		if (o == null || !(o instanceof Equip))
+			return false;
+
+		Equip other = (Equip)o;
+		return this.nom.equals(other.nom);
+	}
 }
 
