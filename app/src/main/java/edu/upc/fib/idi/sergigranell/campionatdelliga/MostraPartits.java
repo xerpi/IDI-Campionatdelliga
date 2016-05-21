@@ -3,6 +3,7 @@ package edu.upc.fib.idi.sergigranell.campionatdelliga;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -12,7 +13,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class MostraPartits extends Activity {
+public class MostraPartits extends AppCompatActivity {
 
 	private ListView equipsListView;
 	private ArrayAdapter<String> arrayAdapter;

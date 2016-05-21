@@ -2,9 +2,10 @@ package edu.upc.fib.idi.sergigranell.campionatdelliga;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
-public class MostraPartit extends Activity {
+public class MostraPartit extends AppCompatActivity {
 
 	private TextView equipLocalTextView;
 	private TextView equipVisitantTextView;

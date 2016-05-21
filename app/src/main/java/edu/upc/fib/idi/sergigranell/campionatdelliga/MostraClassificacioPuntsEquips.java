@@ -2,6 +2,7 @@ package edu.upc.fib.idi.sergigranell.campionatdelliga;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
@@ -19,7 +20,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class MostraClassificacioPuntsEquips extends Activity {
+public class MostraClassificacioPuntsEquips extends AppCompatActivity {
 
 	private DBManager dbmgr;
 	private BarChart barChart;

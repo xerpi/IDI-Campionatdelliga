@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -13,7 +14,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MostraEquip extends Activity {
+public class MostraEquip extends AppCompatActivity {
 
 	private DBManager dbmgr;
 
@@ -86,16 +87,7 @@ public class MostraEquip extends Activity {
 				Intent mostraJugadorsEquipIntent = new Intent(MostraEquip.this,
 					MostraJugadorsEquip.class);
 
-				List<Jugador> llistaJugadorsEquip = equip.getJugadors();
-				List<String> nomsJugadorsEquip = new ArrayList<String>();
-
-				for (Jugador j: llistaJugadorsEquip) {
-					nomsJugadorsEquip.add(j.getNom());
-				}
-
 				mostraJugadorsEquipIntent.putExtra("Equip", equip.getNom());
-				mostraJugadorsEquipIntent.putStringArrayListExtra("JugadorsEquip",
-					(ArrayList<String>)nomsJugadorsEquip);
 
 				startActivity(mostraJugadorsEquipIntent);
 			}

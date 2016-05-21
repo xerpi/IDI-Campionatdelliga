@@ -3,6 +3,7 @@ package edu.upc.fib.idi.sergigranell.campionatdelliga;
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class AfegirPartit extends Activity {
+public class AfegirPartit extends AppCompatActivity {
 
 	private Spinner spinnerEquipLocal;
 	private Spinner spinnerEquipVisitant;

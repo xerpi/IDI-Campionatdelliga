@@ -10,9 +10,10 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="edu.upc.fib.idi.sergigranell.campionatdelliga.MostraEvolucioEquip">
 
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/linechart_evolucio"
+    <FrameLayout
+        android:id="@+id/mostra_evolucio_equip_framelayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+    </FrameLayout>
 
 </RelativeLayout>

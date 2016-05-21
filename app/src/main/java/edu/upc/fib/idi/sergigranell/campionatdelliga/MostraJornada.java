@@ -3,6 +3,7 @@ package edu.upc.fib.idi.sergigranell.campionatdelliga;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,7 +16,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MostraJornada extends Activity {
+public class MostraJornada extends AppCompatActivity {
 
 	private ListView partitsJornadaListView;
 	private ArrayAdapter<Partit> arrayAdapter;
