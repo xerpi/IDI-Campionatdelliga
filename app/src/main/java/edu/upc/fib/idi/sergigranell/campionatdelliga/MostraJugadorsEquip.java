@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -121,6 +122,8 @@ public class MostraJugadorsEquip extends AppCompatActivity {
 					dbmgr.updateJugador(selectedReserva);
 
 					arrayAdapter.notifyDataSetChanged();
+
+					mostraToastReemplac(selectedJugador, selectedReserva);
 				}
 			});
 
@@ -155,6 +158,8 @@ public class MostraJugadorsEquip extends AppCompatActivity {
 					dbmgr.updateJugador(selectedTitular);
 
 					arrayAdapter.notifyDataSetChanged();
+
+					mostraToastReemplac(selectedJugador, selectedTitular);
 				}
 			});
 
@@ -163,6 +168,12 @@ public class MostraJugadorsEquip extends AppCompatActivity {
 			return true;
 		}
 		return false;
+	}
+
+	private void mostraToastReemplac(Jugador j1, Jugador j2)
+	{
+		Toast.makeText(this, j1.getNom() + " reemplaçat per " + j2.getNom(),
+			Toast.LENGTH_SHORT).show();
 	}
 }
 
