@@ -22,6 +22,13 @@ import java.util.Locale;
  */
 public final class Utils {
 
+	public final static int NUM_EQUIPS = 10;
+	public final static int NUM_PARTITS_PER_JORNADA = NUM_EQUIPS / 2;
+	public final static int NUM_JUGADORS_EQUIP = 12;
+	public final static int NUM_JUGADORS_TITULARS = 5;
+	public final static int NUM_JORNADES_INICIALS = 2;
+	public final static int NUM_JUGADORS_TOTALS = NUM_EQUIPS * NUM_JUGADORS_EQUIP;
+
 	public final static int PICK_IMAGE_REQUEST = 1;
 
 	public final static int ESCUT_IMAGE_MAX_SIZE = 256;

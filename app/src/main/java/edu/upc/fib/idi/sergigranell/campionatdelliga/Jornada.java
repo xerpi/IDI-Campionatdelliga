@@ -46,4 +46,9 @@ public class Jornada {
 		partits.add(partit);
 	}
 
+	public int getNumPartits()
+	{
+		return getPartits().size();
+	}
+
 }

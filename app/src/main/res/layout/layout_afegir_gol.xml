@@ -26,11 +26,9 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:orientation="horizontal"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="1">
+        android:layout_height="wrap_content">
 
         <TextView
             android:layout_width="wrap_content"
@@ -38,21 +36,22 @@
             android:text="Minut:"
             android:id="@+id/textview_minut"
             android:layout_marginLeft="10dp"
-            android:layout_gravity="center_vertical"/>
+            android:layout_gravity="center_vertical"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"/>
 
         <NumberPicker
             android:layout_width="wrap_content"
-            android:layout_height="89dp"
+            android:layout_height="wrap_content"
             android:id="@+id/numberpicker_minut_gol"
-            android:paddingLeft="10dp"
-            android:layout_weight="0.32"
-            android:orientation="horizontal"/>
-    </LinearLayout>
+            android:orientation="horizontal"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"/>
+    </RelativeLayout>
 
-    <LinearLayout
-        android:orientation="horizontal"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <Button
             android:layout_width="wrap_content"
@@ -65,7 +64,8 @@
             android:layout_height="wrap_content"
             android:text="Acceptar"
             android:id="@+id/button_acceptar_afegir_gol"
-            />
-    </LinearLayout>
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"/>
+    </RelativeLayout>
 
 </LinearLayout>

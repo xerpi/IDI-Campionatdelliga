@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -110,6 +111,49 @@ public class DBManager extends SQLiteOpenHelper {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 
+	private void insertInitialData(SQLiteDatabase db)
+	{
+		List <Jugador> jugadors = new ArrayList<Jugador>();
+		for (int i = 1; i <= Utils.NUM_JUGADORS_TOTALS; i++) {
+			Jugador j = new Jugador("Jugador " + i);
+			int mod = (i - 1) % Utils.NUM_JUGADORS_EQUIP;
+			if (mod < Utils.NUM_JUGADORS_TITULARS)
+				j.setTipus(Jugador.TipusJugador.TITULAR);
+			else
+				j.setTipus(Jugador.TipusJugador.RESERVA);
+			jugadors.add(j);
+		}
+
+		insertJugadors(db, jugadors);
+
+		List <Equip> equips = new ArrayList<Equip>();
+		for (int i = 1; i <= Utils.NUM_EQUIPS; i++) {
+			Equip e = new Equip("Equip " + i, "Ciutat " + i);
+			for (int j = (i - 1) * Utils.NUM_JUGADORS_EQUIP; j < i * Utils.NUM_JUGADORS_EQUIP; j++) {
+				e.addJugador(jugadors.get(j));
+			}
+			equips.add(e);
+		}
+
+		insertEquips(db, equips);
+
+		final GregorianCalendar gc = new GregorianCalendar(2016, 1, 1);
+		final Date date = gc.getTime();
+
+		List <Jornada> jornades = new ArrayList<Jornada>();
+		for (int i = 1; i <= Utils.NUM_JORNADES_INICIALS; i++) {
+			List <Partit> partits = new ArrayList<Partit>();
+			for (int j = 0; j < Utils.NUM_EQUIPS; j+=2) {
+				Partit p = new Partit(equips.get(j), equips.get(j+1), date, 0, 0);
+				partits.add(p);
+			}
+			jornades.add(new Jornada(partits, i));
+			insertPartits(db, partits);
+		}
+
+		insertJornades(db, jornades);
+	}
+
 	@Override
 	public void onCreate(SQLiteDatabase db)
 	{
@@ -117,6 +161,8 @@ public class DBManager extends SQLiteOpenHelper {
 		db.execSQL(SQL_CREATE_EQUIPS_ENTRIES);
 		db.execSQL(SQL_CREATE_PARTITS_ENTRIES);
 		db.execSQL(SQL_CREATE_JORNADES_ENTRIES);
+
+		insertInitialData(db);
 	}
 
 	@Override
@@ -144,14 +190,26 @@ public class DBManager extends SQLiteOpenHelper {
 		db.execSQL(SQL_DELETE_JORNADES_ENTRIES);
 	}
 
-	public void insertJugador(Jugador jugador)
+	public void insertJugador(SQLiteDatabase db, Jugador jugador)
 	{
-		SQLiteDatabase db = this.getWritableDatabase();
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(JugadorsEntry.COLUMN_NAME_NOM, jugador.getNom());
 		contentValues.put(JugadorsEntry.COLUMN_NAME_TIPUS, jugador.getTipus().toString());
 		db.insert(JugadorsEntry.TABLE_NAME, null, contentValues);
+	}
+
+	public void insertJugador(Jugador jugador)
+	{
+		SQLiteDatabase db = this.getWritableDatabase();
+		insertJugador(db, jugador);
 		db.close();
+	}
+
+	public void insertJugadors(SQLiteDatabase db, List<Jugador> jugadors)
+	{
+		for (Jugador j: jugadors) {
+			insertJugador(db, j);
+		}
 	}
 
 	private Jugador getJugadorFromCursor(Cursor cursor)
@@ -303,11 +361,10 @@ public class DBManager extends SQLiteOpenHelper {
 		return jsonJugadors.toString();
 	}
 
-	public void insertEquip(Equip equip)
+	public void insertEquip(SQLiteDatabase db, Equip equip)
 	{
 		String jsonJugadorsString = getJugadorsEquipAsJSONString(equip);
 
-		SQLiteDatabase db = this.getWritableDatabase();
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(EquipsEntry.COLUMN_NAME_NOM, equip.getNom());
 		contentValues.put(EquipsEntry.COLUMN_NAME_CIUTAT, equip.getCiutat());
@@ -317,7 +374,20 @@ public class DBManager extends SQLiteOpenHelper {
 		contentValues.put(EquipsEntry.COLUMN_NAME_ESCUTFILE, equip.getEscutFile());
 		contentValues.put(EquipsEntry.COLUMN_NAME_JUGADORS, jsonJugadorsString);
 		db.insert(EquipsEntry.TABLE_NAME, null, contentValues);
+	}
+
+	public void insertEquip(Equip equip)
+	{
+		SQLiteDatabase db = this.getWritableDatabase();
+		insertEquip(db, equip);
 		db.close();
+	}
+
+	public void insertEquips(SQLiteDatabase db, List<Equip> equips)
+	{
+		for (Equip e: equips) {
+			insertEquip(db, e);
+		}
 	}
 
 	private List<Jugador> getJugadorsEquipFromJSONString(String jsonJugadorsString)
@@ -532,9 +602,8 @@ public class DBManager extends SQLiteOpenHelper {
 		return jsonJugadors.toString();
 	}
 
-	public void insertPartit(Partit partit)
+	public void insertPartit(SQLiteDatabase db, Partit partit)
 	{
-		SQLiteDatabase db = this.getWritableDatabase();
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(PartitsEntry.COLUMN_NAME_EQUIP_LOCAL,
 			partit.getLocal().getNom());
@@ -549,7 +618,20 @@ public class DBManager extends SQLiteOpenHelper {
 		contentValues.put(PartitsEntry.COLUMN_NAME_LLISTA_GOLS,
 			getGolsPartitAsJSONString(partit));
 		db.insert(PartitsEntry.TABLE_NAME, null, contentValues);
+	}
+
+	public void insertPartit(Partit partit)
+	{
+		SQLiteDatabase db = this.getWritableDatabase();
+		insertPartit(db, partit);
 		db.close();
+	}
+
+	public void insertPartits(SQLiteDatabase db, List<Partit> partits)
+	{
+		for (Partit p: partits) {
+			insertPartit(db, p);
+		}
 	}
 
 	private List<Partit.Gol> getGolsPartitFromJSONString(String llistaGolsString)
@@ -779,15 +861,27 @@ public class DBManager extends SQLiteOpenHelper {
 		return jsonPartits.toString();
 	}
 
-	public void insertJornada(Jornada jornada)
+	public void insertJornada(SQLiteDatabase db, Jornada jornada)
 	{
-		SQLiteDatabase db = this.getWritableDatabase();
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(JornadesEntry.COLUMN_NAME_NUMERO, jornada.getNumero());
 		contentValues.put(JornadesEntry.COLUMN_NAME_LLISTA_PARTITS,
 			getPartitsJornadaAsJSONString(jornada));
 		db.insert(JornadesEntry.TABLE_NAME, null, contentValues);
+	}
+
+	public void insertJornada(Jornada jornada)
+	{
+		SQLiteDatabase db = this.getWritableDatabase();
+		insertJornada(db, jornada);
 		db.close();
+	}
+
+	public void insertJornades(SQLiteDatabase db, List<Jornada> jornades)
+	{
+		for (Jornada j: jornades) {
+			insertJornada(db, j);
+		}
 	}
 
 	private List<Partit> getPartitsJornadaFromJSONString(String llistaPartitsString)

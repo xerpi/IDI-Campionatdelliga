@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +47,7 @@ public class MostraJornada extends AppCompatActivity {
 
 		this.setTitle("Jornada " + numeroJornada);
 
-		arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_2, android.R.id.text1, partits) {
+		arrayAdapter = new ArrayAdapter<Partit>(this, android.R.layout.simple_list_item_2, android.R.id.text1, partits) {
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent) {
 				View view = super.getView(position, convertView, parent);
@@ -109,14 +110,20 @@ public class MostraJornada extends AppCompatActivity {
 	{
 		int id = item.getItemId();
 
-		if (id == R.id.action_afegir_partit) {
-			Intent afegirPartitIntent = new Intent(MostraJornada.this,
-				AfegirPartit.class);
+		if (id == R.id.mostra_jornada_item_afegir_partit) {
+			if (jornada.getNumPartits() == Utils.NUM_PARTITS_PER_JORNADA) {
+				Toast.makeText(this, "Ja s'han jugat tots els partits de la jornada!",
+					Toast.LENGTH_SHORT).show();
+				return false;
+			} else {
+				Intent afegirPartitIntent = new Intent(MostraJornada.this,
+					AfegirPartit.class);
 
-			afegirPartitIntent.putExtra("Jornada", jornada.getNumero());
+				afegirPartitIntent.putExtra("Jornada", jornada.getNumero());
 
-			startActivityForResult(afegirPartitIntent, 0);
-			return true;
+				startActivityForResult(afegirPartitIntent, 0);
+				return true;
+			}
 		}
 
 		return super.onOptionsItemSelected(item);

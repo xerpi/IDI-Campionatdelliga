@@ -23,98 +23,11 @@ public class MainActivity extends AppCompatActivity {
 	private Button mostraJornadesButton;
 	private Button mostraClassificacioButton;
 
-	private DBManager dbmgr;
-
-	private Equip e1, e2, e3;
-	private Partit p1, p2, p3;
-	private Jornada jornada1, jornada2;
-	private Hashtable<String, Equip> equipsHashTable;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
-		e1 = new Equip("Equip 1", "A");
-		e2 = new Equip("Equip 2", "B");
-		e3 = new Equip("Equip 3", "C");
-
-		equipsHashTable = new Hashtable<String, Equip>();
-		equipsHashTable.put(e1.getNom(), e1);
-		equipsHashTable.put(e2.getNom(), e2);
-		equipsHashTable.put(e3.getNom(), e3);
-
-		Jugador j1, j2, j3;
-		j1 = new Jugador("Jugador 1");
-		j2 = new Jugador("Jugador 2");
-		j3 = new Jugador("Jugador 3");
-		j3.setTipus(Jugador.TipusJugador.RESERVA);
-
-		dbmgr = new DBManager(this);
-		//dbmgr.dropTables();
-
-		if (!dbmgr.existsJugador(j1))
-			dbmgr.insertJugador(j1);
-		if (!dbmgr.existsJugador(j2))
-			dbmgr.insertJugador(j2);
-		if (!dbmgr.existsJugador(j3))
-			dbmgr.insertJugador(j3);
-
-		e1.addJugador(j1);
-		e1.addJugador(j2);
-		e1.addJugador(j3);
-		e2.addJugador(j1);
-		e2.addJugador(j2);
-		e2.addJugador(j3);
-		e3.addJugador(j1);
-		e3.addJugador(j2);
-		e3.addJugador(j3);
-
-		if (!dbmgr.existsEquip(e1))
-			dbmgr.insertEquip(e1);
-		if (!dbmgr.existsEquip(e2))
-			dbmgr.insertEquip(e2);
-		if (!dbmgr.existsEquip(e3))
-			dbmgr.insertEquip(e3);
-
-		GregorianCalendar gc = new GregorianCalendar(2016, 1, 1);
-		Date date = gc.getTime();
-
-		p1 = new Partit(e1, e2, date, 0, 2);
-		p2 = new Partit(e1, e3, date, 1, 2);
-		p3 = new Partit(e2, e3, date, 0, 1);
-
-		p1.addGol(j1, 10);
-		p1.addGol(j3, 18);
-
-		if (!dbmgr.existsPartit(p1)) {
-			dbmgr.insertPartit(p1);
-			p1.updatePuntsEquips(dbmgr);
-		}
-		if (!dbmgr.existsPartit(p2)) {
-			dbmgr.insertPartit(p2);
-			p2.updatePuntsEquips(dbmgr);
-		}
-		if (!dbmgr.existsPartit(p3)) {
-			dbmgr.insertPartit(p3);
-			p3.updatePuntsEquips(dbmgr);
-		}
-
-		List<Partit> partitsJ1 = new ArrayList<Partit>();
-		List<Partit> partitsJ2 = new ArrayList<Partit>();
-
-		partitsJ1.add(p1);
-		partitsJ1.add(p2);
-		partitsJ2.add(p3);
-
-		jornada1 = new Jornada(partitsJ1, 1);
-		jornada2 = new Jornada(partitsJ2, 2);
-
-		if (!dbmgr.existsJornada(jornada1))
-			dbmgr.insertJornada(jornada1);
-		if (!dbmgr.existsJornada(jornada2))
-			dbmgr.insertJornada(jornada2);
 
 		mostraEquipsButton = (Button)findViewById(R.id.button_mostra_equips);
 		mostraEquipsButton.setOnClickListener(new View.OnClickListener() {
@@ -165,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
 	protected void onDestroy()
 	{
 		super.onDestroy();
-		dbmgr.close();
 	}
 
 	@Override

@@ -130,8 +130,11 @@ public class AfegirPartit extends AppCompatActivity {
 				jugadors.addAll(jugadorsEquipVisitant);
 
 				List<String> nomJugadors = new ArrayList<String>();
-				for (Jugador j : jugadors) {
-					nomJugadors.add(j.getNom());
+				for (Jugador j : jugadorsEquipLocal) {
+					nomJugadors.add(equipLocal.getNom() + ": " + j.getNom());
+				}
+				for (Jugador j : jugadorsEquipVisitant) {
+					nomJugadors.add(equipVisitant.getNom() + ": " + j.getNom());
 				}
 
 				ArrayAdapter<String> adp = new ArrayAdapter<String>(AfegirPartit.this,
@@ -184,8 +187,18 @@ public class AfegirPartit extends AppCompatActivity {
 				int equipVisitantPos = spinnerEquipVisitant.getSelectedItemPosition();
 				int jornadaPos = spinnerJornada.getSelectedItemPosition();
 
+				int numeroJornada = arrayListJornada.get(jornadaPos);
+
+				Jornada jornada = dbmgr.queryJornada(numeroJornada);
+
 				if (equipLocalPos == equipVisitantPos) {
 					Toast.makeText(AfegirPartit.this, "No poden ser el mateix equip!",
+						Toast.LENGTH_SHORT).show();
+					return;
+				} else if (jornada.getNumPartits() == Utils.NUM_PARTITS_PER_JORNADA) {
+					Toast.makeText(AfegirPartit.this,
+						"Ja s'han jugat tots els partits de la jornada " +
+							numeroJornada + "!",
 						Toast.LENGTH_SHORT).show();
 					return;
 				}
@@ -202,9 +215,6 @@ public class AfegirPartit extends AppCompatActivity {
 				dbmgr.insertPartit(nouPartit);
 				nouPartit.updatePuntsEquips(dbmgr);
 
-				int numeroJornada = arrayListJornada.get(jornadaPos);
-
-				Jornada jornada = dbmgr.queryJornada(numeroJornada);
 				jornada.addPartit(nouPartit);
 				dbmgr.updateJornada(jornada);
 

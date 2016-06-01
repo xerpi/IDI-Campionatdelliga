@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -11,12 +13,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MostraPartits extends AppCompatActivity {
 
 	private ListView equipsListView;
-	private ArrayAdapter<String> arrayAdapter;
+	private ArrayAdapter<Partit> arrayAdapter;
 
 	private List<Partit> partits;
 	private DBManager dbmgr;
@@ -29,11 +32,11 @@ public class MostraPartits extends AppCompatActivity {
 
 		dbmgr = new DBManager(MostraPartits.this);
 
-		partits = dbmgr.queryAllPartits();
+		partits = new ArrayList<Partit>();
 
 		this.setTitle("Llista de partits");
 
-		arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_2, android.R.id.text1, partits) {
+		arrayAdapter = new ArrayAdapter<Partit>(this, android.R.layout.simple_list_item_2, android.R.id.text1, partits) {
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent) {
 				View view = super.getView(position, convertView, parent);
@@ -51,6 +54,8 @@ public class MostraPartits extends AppCompatActivity {
 				return view;
 			}
 		};
+
+		refreshPartits();
 
 		equipsListView = (ListView)findViewById(R.id.listview_partits);
 		equipsListView.setAdapter(arrayAdapter);
@@ -80,5 +85,44 @@ public class MostraPartits extends AppCompatActivity {
 	{
 		super.onDestroy();
 		dbmgr.close();
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+		getMenuInflater().inflate(R.menu.menu_mostra_partits, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		int id = item.getItemId();
+
+		if (id == R.id.mostra_partits_item_afegir_partit) {
+			Intent afegirPartitIntent = new Intent(MostraPartits.this,
+				AfegirPartit.class);
+
+			startActivityForResult(afegirPartitIntent, 0);
+			return true;
+		}
+
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		super.onActivityResult(requestCode, resultCode, data);
+		refreshPartits();
+	}
+
+	private void refreshPartits()
+	{
+		partits = dbmgr.queryAllPartits();
+
+		arrayAdapter.clear();
+		arrayAdapter.addAll(partits);
+		arrayAdapter.notifyDataSetChanged();
 	}
 }
