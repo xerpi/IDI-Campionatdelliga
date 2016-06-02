@@ -253,10 +253,10 @@ public class DBManager extends SQLiteOpenHelper {
 			sortOrder                  // The sort order
 		);
 
-		if (cursor == null)
+		if (!cursor.moveToFirst()) {
+			db.close();
 			return null;
-
-		cursor.moveToFirst();
+		}
 
 		Jugador jugador = getJugadorFromCursor(cursor);
 
@@ -486,10 +486,10 @@ public class DBManager extends SQLiteOpenHelper {
 			sortOrder                  // The sort order
 		);
 
-		if (cursor == null)
+		if (!cursor.moveToFirst()) {
+			db.close();
 			return null;
-
-		cursor.moveToFirst();
+		}
 
 		Equip equip = getEquipFromCursor(cursor);
 
@@ -612,7 +612,7 @@ public class DBManager extends SQLiteOpenHelper {
 		contentValues.put(PartitsEntry.COLUMN_NAME_EQUIP_VISITANT,
 			partit.getVisitant().getNom());
 		contentValues.put(PartitsEntry.COLUMN_NAME_JORNADA,
-			Integer.toString(partit.getJornada()));
+			partit.getJornada());
 		contentValues.put(PartitsEntry.COLUMN_NAME_GOLS_LOCAL,
 			partit.getGolsLocal());
 		contentValues.put(PartitsEntry.COLUMN_NAME_GOLS_VISITANT,
@@ -734,10 +734,10 @@ public class DBManager extends SQLiteOpenHelper {
 			null                       // The sort order
 		);
 
-		if (cursor == null)
+		if (!cursor.moveToFirst()) {
+			db.close();
 			return null;
-
-		cursor.moveToFirst();
+		}
 
 		Partit partit = getPartitFromCursor(cursor);
 
@@ -970,10 +970,10 @@ public class DBManager extends SQLiteOpenHelper {
 			sortOrder                  // The sort order
 		);
 
-		if (cursor == null)
+		if (!cursor.moveToFirst()) {
+			db.close();
 			return null;
-
-		cursor.moveToFirst();
+		}
 
 		Jornada jornada = getJornadaFromCursor(cursor);
 

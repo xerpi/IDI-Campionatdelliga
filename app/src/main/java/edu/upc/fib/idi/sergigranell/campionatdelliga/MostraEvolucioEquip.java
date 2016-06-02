@@ -86,13 +86,15 @@ public class MostraEvolucioEquip extends AppCompatActivity {
 				List<Partit> partits = j.getPartits();
 				int golsMarcats = 0;
 				int golsEncaixats = 0;
-				for (Partit p: partits) {
-					if (p.getLocal().equals(equip)) {
-						golsMarcats += p.getGolsLocal();
-						golsEncaixats += p.getGolsVisitant();
-					} else if (p.getVisitant().equals(equip)) {
-						golsMarcats += p.getGolsVisitant();
-						golsEncaixats += p.getGolsLocal();
+				if (partits != null) {
+					for (Partit p : partits) {
+						if (p.getLocal().equals(equip)) {
+							golsMarcats += p.getGolsLocal();
+							golsEncaixats += p.getGolsVisitant();
+						} else if (p.getVisitant().equals(equip)) {
+							golsMarcats += p.getGolsVisitant();
+							golsEncaixats += p.getGolsLocal();
+						}
 					}
 				}
 				golsMarcatsValues.add(new Entry(golsMarcats, entryNum));
@@ -189,22 +191,24 @@ public class MostraEvolucioEquip extends AppCompatActivity {
 				int partitsGuanyats = 0;
 				int partitsPerduts = 0;
 				int partitsEmpatats = 0;
-				for (Partit p: partits) {
-					if (p.getLocal().equals(equip)) {
-						if (p.getGolsLocal() > p.getGolsVisitant()) {
-							partitsGuanyats++;
-						} else if (p.getGolsLocal() < p.getGolsVisitant()) {
-							partitsPerduts++;
-						} else {
-							partitsEmpatats++;
-						}
-					} else if (p.getVisitant().equals(equip)) {
-						if (p.getGolsVisitant() > p.getGolsLocal()) {
-							partitsGuanyats++;
-						} else if (p.getGolsVisitant() < p.getGolsLocal()) {
-							partitsPerduts++;
-						} else {
-							partitsEmpatats++;
+				if (partits != null) {
+					for (Partit p : partits) {
+						if (p.getLocal().equals(equip)) {
+							if (p.getGolsLocal() > p.getGolsVisitant()) {
+								partitsGuanyats++;
+							} else if (p.getGolsLocal() < p.getGolsVisitant()) {
+								partitsPerduts++;
+							} else {
+								partitsEmpatats++;
+							}
+						} else if (p.getVisitant().equals(equip)) {
+							if (p.getGolsVisitant() > p.getGolsLocal()) {
+								partitsGuanyats++;
+							} else if (p.getGolsVisitant() < p.getGolsLocal()) {
+								partitsPerduts++;
+							} else {
+								partitsEmpatats++;
+							}
 						}
 					}
 				}

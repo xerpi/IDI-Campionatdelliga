@@ -73,7 +73,7 @@ public class MostraPartits extends AppCompatActivity {
 				mostraPartitIntent.putExtra("EquipVisitant",
 					partit.getVisitant().getNom());
 				mostraPartitIntent.putExtra("Jornada",
-					Integer.toString(partit.getJornada()));
+					partit.getJornada());
 
 				startActivity(mostraPartitIntent);
 			}

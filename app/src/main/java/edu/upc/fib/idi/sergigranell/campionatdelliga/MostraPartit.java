@@ -10,7 +10,7 @@ public class MostraPartit extends AppCompatActivity {
 	private TextView equipLocalTextView;
 	private TextView equipVisitantTextView;
 	private TextView resultatTextView;
-	private TextView dataTextView;
+	private TextView jornadaTextView;
 
 	private DBManager dbmgr;
 
@@ -56,8 +56,8 @@ public class MostraPartit extends AppCompatActivity {
 		resultatTextView = (TextView)findViewById(R.id.textview_resultat);
 		resultatTextView.setText(partit.getGolsLocal() + "-" + partit.getGolsVisitant());
 
-		dataTextView = (TextView)findViewById(R.id.textview_data);
-		dataTextView.setText(Integer.toString(partit.getJornada()));
+		jornadaTextView = (TextView)findViewById(R.id.textview_jornada);
+		jornadaTextView.setText(Integer.toString(partit.getJornada()));
 	}
 
 	@Override

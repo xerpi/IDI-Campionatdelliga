@@ -288,6 +288,14 @@ public class AfegirPartit extends AppCompatActivity {
 				jornada.addPartit(nouPartit);
 				dbmgr.updateJornada(jornada);
 
+				if (jornada.getNumPartits() == Utils.NUM_PARTITS_PER_JORNADA) {
+					dbmgr.insertJornada(new Jornada(null, numeroJornada + 1));
+					Toast.makeText(AfegirPartit.this,
+						"S'ha iniciat la jornada " +
+							(numeroJornada + 1) + "!",
+						Toast.LENGTH_LONG).show();
+				}
+
 				finish();
 			}
 		});
