@@ -50,7 +50,7 @@ public class MostraPartits extends AppCompatActivity {
 					partit.getGolsLocal() + " - " +
 					partit.getGolsVisitant()
 				);
-				text2.setText(Utils.dateToString(partit.getData()));
+				text2.setText("Jornada " + Integer.toString(partit.getJornada()));
 				return view;
 			}
 		};
@@ -72,8 +72,8 @@ public class MostraPartits extends AppCompatActivity {
 					partit.getLocal().getNom());
 				mostraPartitIntent.putExtra("EquipVisitant",
 					partit.getVisitant().getNom());
-				mostraPartitIntent.putExtra("Data",
-					Utils.dateToString(partit.getData()));
+				mostraPartitIntent.putExtra("Jornada",
+					Integer.toString(partit.getJornada()));
 
 				startActivity(mostraPartitIntent);
 			}

@@ -10,7 +10,7 @@ import java.util.List;
 public class Partit {
 	private Equip local;
 	private Equip visitant;
-	private Date data;
+	int jornada;
 	private int golsLocal;
 	private int golsVisitant;
 
@@ -66,19 +66,19 @@ public class Partit {
 
 	List<Gol> gols;
 
-	public Partit(Equip local, Equip visitant, Date data, int golsLocal, int golsVisitant)
+	public Partit(Equip local, Equip visitant, int jornada, int golsLocal, int golsVisitant)
 	{
 		this.local = local;
 		this.visitant = visitant;
-		this.data = data;
+		this.jornada = jornada;
 		this.golsLocal = golsLocal;
 		this.golsVisitant = golsVisitant;
 		this.gols = new ArrayList<Gol>();
 	}
 
-	public Partit(Equip local, Equip visitant, Date data)
+	public Partit(Equip local, Equip visitant, int jornada)
 	{
-		this(local, visitant, data, 0, 0);
+		this(local, visitant, jornada, 0, 0);
 	}
 
 	public Equip getLocal()
@@ -101,14 +101,14 @@ public class Partit {
 		this.visitant = visitant;
 	}
 
-	public Date getData()
+	public int getJornada()
 	{
-		return data;
+		return jornada;
 	}
 
-	public void setData(Date data)
+	public void setJornada(int jornada)
 	{
-		this.data = data;
+		this.jornada = jornada;
 	}
 
 	public int getGolsVisitant()

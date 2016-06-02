@@ -61,7 +61,7 @@ public class MostraJornada extends AppCompatActivity {
 						partit.getGolsLocal() + " - " +
 						partit.getGolsVisitant()
 				);
-				text2.setText(Utils.dateToString(partit.getData()));
+				text2.setText("Jornada " + Integer.toString(partit.getJornada()));
 				return view;
 			}
 		};
@@ -83,8 +83,8 @@ public class MostraJornada extends AppCompatActivity {
 					partit.getLocal().getNom());
 				mostraPartitIntent.putExtra("EquipVisitant",
 					partit.getVisitant().getNom());
-				mostraPartitIntent.putExtra("Data",
-					Utils.dateToString(partit.getData()));
+				mostraPartitIntent.putExtra("Jornada",
+					partit.getJornada());
 
 				startActivity(mostraPartitIntent);
 			}
@@ -141,8 +141,10 @@ public class MostraJornada extends AppCompatActivity {
 		jornada = dbmgr.queryJornada(numeroJornada);
 		partits = jornada.getPartits();
 
-		arrayAdapter.clear();
-		arrayAdapter.addAll(partits);
-		arrayAdapter.notifyDataSetChanged();
+		if (partits != null) {
+			arrayAdapter.clear();
+			arrayAdapter.addAll(partits);
+			arrayAdapter.notifyDataSetChanged();
+		}
 	}
 }

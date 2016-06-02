@@ -50,7 +50,10 @@ public class AfegirPartit extends AppCompatActivity {
 
 	private List<Equip> equips;
 
-	int numeroJornada;
+	private int numeroJornada;
+
+	private int minuteOfLastGol;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -217,7 +220,7 @@ public class AfegirPartit extends AppCompatActivity {
 				final NumberPicker np = (NumberPicker)dialog.findViewById(R.id.numberpicker_minut_gol);
 				np.setMinValue(0);
 				np.setMaxValue(40);
-				np.setValue(0);
+				np.setValue(minuteOfLastGol);
 
 				Button buttonAcceptarAfegirGol = (Button)dialog.findViewById(R.id.button_acceptar_afegir_gol);
 				buttonAcceptarAfegirGol.setOnClickListener(new View.OnClickListener() {
@@ -230,6 +233,7 @@ public class AfegirPartit extends AppCompatActivity {
 						Jugador j = jugadors.get(pos);
 
 						arrayListGols.add(new Partit.Gol(j, minut));
+						minuteOfLastGol = minut;
 
 						arrayAdapterGolsListView.notifyDataSetChanged();
 						dialog.cancel();
@@ -275,7 +279,7 @@ public class AfegirPartit extends AppCompatActivity {
 					return;
 				}
 
-				Partit nouPartit = new Partit(equipLocal, equipVisitant, new Date());
+				Partit nouPartit = new Partit(equipLocal, equipVisitant, numeroJornada);
 				nouPartit.addGolList(arrayListGols);
 
 				dbmgr.insertPartit(nouPartit);
@@ -311,6 +315,7 @@ public class AfegirPartit extends AppCompatActivity {
 		});
 
 		spinnerJornada.setSelection(arrayListJornada.indexOf(numeroJornada));
+		minuteOfLastGol = 0;
 	}
 
 	@Override

@@ -34,13 +34,11 @@ public class MostraPartit extends AppCompatActivity {
 		if (nomEquipVisitant == null)
 			return;
 
-		String dataString = (String)extras.getString("Data");
-		if (dataString == null)
-			return;
+		int jornada = extras.getInt("Jornada");
 
 		dbmgr = new DBManager(this);
 
-		partit = dbmgr.queryPartit(nomEquipLocal, nomEquipVisitant, dataString);
+		partit = dbmgr.queryPartit(nomEquipLocal, nomEquipVisitant, jornada);
 		if (partit == null)
 			return;
 
@@ -59,7 +57,7 @@ public class MostraPartit extends AppCompatActivity {
 		resultatTextView.setText(partit.getGolsLocal() + "-" + partit.getGolsVisitant());
 
 		dataTextView = (TextView)findViewById(R.id.textview_data);
-		dataTextView.setText(Utils.dateToString(partit.getData()));
+		dataTextView.setText(Integer.toString(partit.getJornada()));
 	}
 
 	@Override

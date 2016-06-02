@@ -1,5 +1,6 @@
 package edu.upc.fib.idi.sergigranell.campionatdelliga;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,12 +44,18 @@ public class Jornada {
 
 	public void addPartit(Partit partit)
 	{
+		if (partits == null) {
+			partits = new ArrayList<Partit>();
+		}
 		partits.add(partit);
 	}
 
 	public int getNumPartits()
 	{
-		return getPartits().size();
+		if (partits == null)
+			return 0;
+		else
+			return partits.size();
 	}
 
 }
