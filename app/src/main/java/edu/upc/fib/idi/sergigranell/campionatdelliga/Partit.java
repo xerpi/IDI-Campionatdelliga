@@ -160,9 +160,6 @@ public class Partit {
 		else
 			return;
 
-		Jugador jugador = gol.getJugador();
-		jugador.setGolsMarcats(jugador.getGolsMarcats() + 1);
-
 		gols.add(gol);
 	}
 
