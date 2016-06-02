@@ -1,5 +1,7 @@
 package edu.upc.fib.idi.sergigranell.campionatdelliga;
 
+import android.database.sqlite.SQLiteDatabase;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -158,6 +160,9 @@ public class Partit {
 		else
 			return;
 
+		Jugador jugador = gol.getJugador();
+		jugador.setGolsMarcats(jugador.getGolsMarcats() + 1);
+
 		gols.add(gol);
 	}
 
@@ -182,5 +187,22 @@ public class Partit {
 
 		dbmgr.updateEquip(local);
 		dbmgr.updateEquip(visitant);
+	}
+
+	public void updatePuntsEquips(SQLiteDatabase db, DBManager dbmgr)
+	{
+		if (golsLocal > golsVisitant) {
+			local.setPartitsGuanyats(local.getPartitsGuanyats() + 1);
+			visitant.setPartitsPerduts(visitant.getPartitsPerduts() + 1);
+		} else if (golsLocal < golsVisitant) {
+			local.setPartitsPerduts(local.getPartitsPerduts() + 1);
+			visitant.setPartitsGuanyats(visitant.getPartitsGuanyats() + 1);
+		} else {
+			local.setPartitsEmpatats(local.getPartitsEmpatats() + 1);
+			visitant.setPartitsEmpatats(visitant.getPartitsEmpatats() + 1);
+		}
+
+		dbmgr.updateEquip(db, local);
+		dbmgr.updateEquip(db, visitant);
 	}
 }

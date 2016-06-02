@@ -27,6 +27,7 @@ public class DBManager extends SQLiteOpenHelper {
 		public static final String TABLE_NAME = "jugadors";
 		public static final String COLUMN_NAME_NOM = "nom";
 		public static final String COLUMN_NAME_TIPUS = "tipus";
+		public static final String COLUMN_NAME_GOLS_MARCATS = "gols_marcats";
 	}
 
 	public static abstract class EquipsEntry {
@@ -59,7 +60,8 @@ public class DBManager extends SQLiteOpenHelper {
 	private static final String SQL_CREATE_JUGADORS_ENTRIES =
 		"CREATE TABLE " + JugadorsEntry.TABLE_NAME + " (" +
 			JugadorsEntry.COLUMN_NAME_NOM + " TEXT PRIMARY KEY," +
-			JugadorsEntry.COLUMN_NAME_TIPUS + " TEXT" +
+			JugadorsEntry.COLUMN_NAME_TIPUS + " TEXT," +
+			JugadorsEntry.COLUMN_NAME_GOLS_MARCATS + " INTEGER" +
 		" )";
 
 	private static final String SQL_CREATE_EQUIPS_ENTRIES =
@@ -145,6 +147,7 @@ public class DBManager extends SQLiteOpenHelper {
 			List <Partit> partits = new ArrayList<Partit>();
 			for (int j = 0; j < Utils.NUM_EQUIPS; j+=2) {
 				Partit p = new Partit(equips.get(j), equips.get(j+1), i, 0, 0);
+				p.updatePuntsEquips(db, this);
 				partits.add(p);
 			}
 			jornades.add(new Jornada(partits, i));
@@ -222,8 +225,11 @@ public class DBManager extends SQLiteOpenHelper {
 		Jugador.TipusJugador tipus = Jugador.TipusJugador.valueOf(
 			cursor.getString(cursor.getColumnIndexOrThrow(JugadorsEntry.COLUMN_NAME_TIPUS))
 		);
+		int golsMarcats = cursor.getInt(
+			cursor.getColumnIndexOrThrow(JugadorsEntry.COLUMN_NAME_GOLS_MARCATS)
+		);
 
-		Jugador jugador = new Jugador(nom, tipus);
+		Jugador jugador = new Jugador(nom, tipus, golsMarcats);
 
 		return jugador;
 	}
@@ -234,7 +240,8 @@ public class DBManager extends SQLiteOpenHelper {
 
 		String[] projection = {
 			JugadorsEntry.COLUMN_NAME_NOM,
-			JugadorsEntry.COLUMN_NAME_TIPUS
+			JugadorsEntry.COLUMN_NAME_TIPUS,
+			JugadorsEntry.COLUMN_NAME_GOLS_MARCATS
 		};
 
 		String selection = JugadorsEntry.COLUMN_NAME_NOM + "=?";
@@ -294,6 +301,7 @@ public class DBManager extends SQLiteOpenHelper {
 
 		ContentValues values = new ContentValues();
 		values.put(JugadorsEntry.COLUMN_NAME_TIPUS, jugador.getTipus().toString());
+		values.put(JugadorsEntry.COLUMN_NAME_GOLS_MARCATS, jugador.getGolsMarcats());
 
 		String selection = JugadorsEntry.COLUMN_NAME_NOM + " LIKE ?";
 		String[] selectionArgs = {
@@ -521,10 +529,8 @@ public class DBManager extends SQLiteOpenHelper {
 		return llistaEquips;
 	}
 
-	public void updateEquip(Equip equip)
+	public void updateEquip(SQLiteDatabase db, Equip equip)
 	{
-		SQLiteDatabase db = this.getReadableDatabase();
-
 		ContentValues values = new ContentValues();
 		values.put(EquipsEntry.COLUMN_NAME_CIUTAT, equip.getCiutat());
 		values.put(EquipsEntry.COLUMN_NAME_PARTITS_GUANYATS, equip.getPartitsGuanyats());
@@ -538,12 +544,16 @@ public class DBManager extends SQLiteOpenHelper {
 			equip.getNom()
 		};
 
-		int count = db.update(
-			EquipsEntry.TABLE_NAME,
+		db.update(EquipsEntry.TABLE_NAME,
 			values,
 			selection,
 			selectionArgs);
+	}
 
+	public void updateEquip(Equip equip)
+	{
+		SQLiteDatabase db = this.getReadableDatabase();
+		updateEquip(db, equip);
 		db.close();
 	}
 

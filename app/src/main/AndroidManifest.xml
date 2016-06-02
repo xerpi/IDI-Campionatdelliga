@@ -54,6 +54,8 @@
         </activity>
         <activity android:name=".MostraEvolucioEquip">
         </activity>
+        <activity android:name=".MostraClassificacioGolsJugadors">
+        </activity>
     </application>
 
 </manifest>

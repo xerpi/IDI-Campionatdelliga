@@ -7,22 +7,33 @@ public class Jugador {
 
 	public enum TipusJugador {
 		TITULAR,
-		RESERVA
+		RESERVA,
+		ELIMINAT
 	}
 
 	private String nom;
 	private TipusJugador tipus;
+	private int golsMarcats;
 
 	public Jugador(String nom)
 	{
 		this.nom = nom;
 		this.tipus = TipusJugador.TITULAR;
+		this.golsMarcats = 0;
 	}
 
 	public Jugador(String nom, TipusJugador tipus)
 	{
 		this.nom = nom;
 		this.tipus = tipus;
+		this.golsMarcats = 0;
+	}
+
+	public Jugador(String nom, TipusJugador tipus, int golsMarcats)
+	{
+		this.nom = nom;
+		this.tipus = tipus;
+		this.golsMarcats = golsMarcats;
 	}
 
 	public String getNom()
@@ -43,6 +54,16 @@ public class Jugador {
 	public void setTipus(TipusJugador tipus)
 	{
 		this.tipus = tipus;
+	}
+
+	public int getGolsMarcats()
+	{
+		return golsMarcats;
+	}
+
+	public void setGolsMarcats(int golsMarcats)
+	{
+		this.golsMarcats = golsMarcats;
 	}
 
 	public boolean equals(Object o)

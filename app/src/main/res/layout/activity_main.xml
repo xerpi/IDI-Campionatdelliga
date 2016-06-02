@@ -14,7 +14,8 @@
         android:text="Mostra equips"
         android:id="@+id/button_mostra_equips"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/button_mostra_partits"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -22,7 +23,8 @@
         android:text="Mostra partits"
         android:id="@+id/button_mostra_partits"
         android:layout_below="@+id/button_mostra_equips"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/button_mostra_jornades"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -30,13 +32,23 @@
         android:text="Mostra jornades"
         android:id="@+id/button_mostra_jornades"
         android:layout_below="@+id/button_mostra_partits"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/button_mostra_classificacio_equips"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mostra classificació equips"
+        android:id="@+id/button_mostra_classificacio_equips"
+        android:layout_below="@+id/button_mostra_jornades"
         android:layout_alignParentStart="true"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Mostra classificació"
-        android:id="@+id/button_mostra_classificacio"
-        android:layout_below="@+id/button_mostra_jornades"
-        android:layout_alignParentStart="true"/>
+        android:text="Mostra classificació jugadors"
+        android:id="@+id/button_mostra_classificacio_jugadors"
+        android:layout_below="@+id/button_mostra_classificacio_equips"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/button_mostra_classificacio_equips"/>
 </RelativeLayout>

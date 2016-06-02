@@ -281,6 +281,11 @@ public class AfegirPartit extends AppCompatActivity {
 
 				Partit nouPartit = new Partit(equipLocal, equipVisitant, numeroJornada);
 				nouPartit.addGolList(arrayListGols);
+				for (Partit.Gol gol: arrayListGols) {
+					Jugador jugador = gol.getJugador();
+					jugador.setGolsMarcats(jugador.getGolsMarcats() + 1);
+					dbmgr.updateJugador(jugador);
+				}
 
 				dbmgr.insertPartit(nouPartit);
 				nouPartit.updatePuntsEquips(dbmgr);

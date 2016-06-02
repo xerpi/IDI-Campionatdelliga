@@ -61,9 +61,10 @@ public class MostraClassificacioPuntsEquips extends AppCompatActivity {
 
 		dataSetPuntsEquips.setValueFormatter(new Utils.IntegerValueFormatter());
 
-		barChart = (BarChart)findViewById(R.id.barchart_classificacio);
+		barChart = (BarChart)findViewById(R.id.barchart_classificacio_equips);
 		barChart.setData(data);
 		barChart.setDescription("Punts dels equips");
 		barChart.animateY(1000, Easing.EasingOption.EaseInSine);
+		barChart.getXAxis().setAvoidFirstLastClipping(true);
 	}
 }

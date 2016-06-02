@@ -1,6 +1,5 @@
 package edu.upc.fib.idi.sergigranell.campionatdelliga;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,19 +8,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Hashtable;
-import java.util.List;
-
 
 public class MainActivity extends AppCompatActivity {
 
 	private Button mostraEquipsButton;
 	private Button mostraPartitsButton;
 	private Button mostraJornadesButton;
-	private Button mostraClassificacioButton;
+	private Button mostraClassificacioEquipsButton;
+	private Button mostraClassificacioJugadorsButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -62,14 +56,25 @@ public class MainActivity extends AppCompatActivity {
 			}
 		});
 
-		mostraClassificacioButton = (Button)findViewById(R.id.button_mostra_classificacio);
-		mostraClassificacioButton.setOnClickListener(new View.OnClickListener() {
+		mostraClassificacioEquipsButton = (Button)findViewById(R.id.button_mostra_classificacio_equips);
+		mostraClassificacioEquipsButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v)
 			{
-				Intent mostraClassificacioIntent = new Intent(MainActivity.this,
+				Intent mostraClassificacioEquipsIntent = new Intent(MainActivity.this,
 					MostraClassificacioPuntsEquips.class);
-				startActivity(mostraClassificacioIntent);
+				startActivity(mostraClassificacioEquipsIntent);
+			}
+		});
+
+		mostraClassificacioJugadorsButton = (Button)findViewById(R.id.button_mostra_classificacio_jugadors);
+		mostraClassificacioJugadorsButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v)
+			{
+				Intent mostraClassificacioJugadorsIntent = new Intent(MainActivity.this,
+					MostraClassificacioGolsJugadors.class);
+				startActivity(mostraClassificacioJugadorsIntent);
 			}
 		});
 	}
