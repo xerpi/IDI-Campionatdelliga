@@ -1,15 +1,24 @@
 package edu.upc.fib.idi.sergigranell.campionatdelliga;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -28,18 +37,18 @@ public class AfegirPartit extends AppCompatActivity {
 	private Button buttonCancelar;
 	private Button buttonAcceptar;
 
-	private ArrayAdapter<String> arrayAdapterEquipLocal;
-	private ArrayAdapter<String> arrayAdapterEquipVisitant;
+	private ArrayAdapter<Equip> arrayAdapterEquipLocal;
+	private ArrayAdapter<Equip> arrayAdapterEquipVisitant;
 	private ArrayAdapter<Integer> arrayAdapterJornada;
-	private ArrayAdapter<String> arrayAdapterGolsListView;
-	private ArrayList<String> arrayListEquipLocal;
-	private ArrayList<String> arrayListEquipVisitant;
+	private ArrayAdapter<Partit.Gol> arrayAdapterGolsListView;
+	private ArrayList<Equip> arrayListEquipLocal;
+	private ArrayList<Equip> arrayListEquipVisitant;
 	private ArrayList<Integer> arrayListJornada;
-	private ArrayList<String> arrayListGolsListView;
-
-	private ArrayList<Partit.Gol> golsList;
+	private ArrayList<Partit.Gol> arrayListGols;
 
 	private DBManager dbmgr;
+
+	private List<Equip> equips;
 
 	int numeroJornada;
 
@@ -58,29 +67,78 @@ public class AfegirPartit extends AppCompatActivity {
 
 		dbmgr = new DBManager(this);
 
-		golsList = new ArrayList<Partit.Gol>();
+		equips = dbmgr.queryAllEquips();
 
-		arrayListEquipLocal = new ArrayList<String>();
-		arrayListEquipVisitant = new ArrayList<String>();
+		arrayListEquipLocal = new ArrayList<Equip>();
+		arrayListEquipVisitant = new ArrayList<Equip>();
 		arrayListJornada = new ArrayList<Integer>();
-		arrayListGolsListView = new ArrayList<String>();
+		arrayListGols = new ArrayList<Partit.Gol>();
 
-		arrayAdapterEquipLocal = new ArrayAdapter<String>(this,
-			android.R.layout.simple_spinner_dropdown_item, arrayListEquipLocal);
+		arrayAdapterEquipLocal = new ArrayAdapter<Equip>(this,
+			android.R.layout.simple_spinner_dropdown_item, android.R.id.text1,
+			arrayListEquipLocal) {
 
-		arrayAdapterEquipVisitant = new ArrayAdapter<String>(this,
-			android.R.layout.simple_spinner_dropdown_item, arrayListEquipVisitant);
+			@Override
+			public View getView(int position, View convertView, ViewGroup parent)
+			{
+				View view = super.getView(position, convertView, parent);
+				equipsSpinnerView(view, position);
+				return view;
+			}
+
+			@Override
+			public View getDropDownView(int position, View convertView, ViewGroup parent)
+			{
+				View view = super.getView(position, convertView, parent);
+				equipsSpinnerView(view, position);
+				return view;
+			}
+		};
+
+		arrayAdapterEquipVisitant = new ArrayAdapter<Equip>(this,
+			android.R.layout.simple_spinner_dropdown_item, android.R.id.text1,
+			arrayListEquipVisitant) {
+
+			@Override
+			public View getView(int position, View convertView, ViewGroup parent)
+			{
+				View view = super.getView(position, convertView, parent);
+				equipsSpinnerView(view, position);
+				return view;
+			}
+
+			@Override
+			public View getDropDownView(int position, View convertView, ViewGroup parent)
+			{
+				View view = super.getView(position, convertView, parent);
+				equipsSpinnerView(view, position);
+				return view;
+			}
+		};
 
 		arrayAdapterJornada = new ArrayAdapter<Integer>(this,
 			android.R.layout.simple_spinner_dropdown_item, arrayListJornada);
 
-		arrayAdapterGolsListView = new ArrayAdapter<String>(this,
-			android.R.layout.simple_list_item_1, arrayListGolsListView);
+		arrayAdapterGolsListView = new ArrayAdapter<Partit.Gol>(this,
+			android.R.layout.simple_list_item_1, arrayListGols);
 
-		List<Equip> equips = dbmgr.queryAllEquips();
+		arrayAdapterGolsListView = new ArrayAdapter<Partit.Gol>(this,
+			android.R.layout.simple_spinner_dropdown_item, android.R.id.text1,
+			arrayListGols) {
+			@Override
+			public View getView(int position, View convertView, ViewGroup parent)
+			{
+				View view = super.getView(position, convertView, parent);
+				TextView tv = (TextView) view.findViewById(android.R.id.text1);
+				Partit.Gol gol = arrayListGols.get(position);
+				tv.setText(gol.getJugador().getNom() + ": " + gol.getMinut());
+				return view;
+			}
+		};
+
 		for (Equip e: equips) {
-			arrayListEquipLocal.add(e.getNom());
-			arrayListEquipVisitant.add(e.getNom());
+			arrayListEquipLocal.add(e);
+			arrayListEquipVisitant.add(e);
 		}
 
 		List<Jornada> jornades = dbmgr.queryAllJornades();
@@ -101,39 +159,52 @@ public class AfegirPartit extends AppCompatActivity {
 		spinnerJornada.setAdapter(arrayAdapterJornada);
 
 		listViewGols.setAdapter(arrayAdapterGolsListView);
+		listViewGols.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+			@Override
+			public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo)
+			{
+				if (view.getId() == R.id.afegir_partit_listview_gols) {
+					AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) contextMenuInfo;
+					Partit.Gol gol = arrayListGols.get(info.position);
 
-		spinnerJornada.setSelection(arrayListJornada.indexOf(numeroJornada));
-
+					MenuInflater inflater = getMenuInflater();
+					inflater.inflate(R.menu.menu_llista_gols_seleccionat, contextMenu);
+				}
+			}
+		});
 		buttonAfegirGol.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v)
 			{
+				int equipLocalPos = spinnerEquipLocal.getSelectedItemPosition();
+				int equipVisitantPos = spinnerEquipVisitant.getSelectedItemPosition();
+
+				Equip equipLocal = arrayListEquipLocal.get(equipLocalPos);
+				Equip equipVisitant = arrayListEquipVisitant.get(equipVisitantPos);
+
+				if (equipLocal.equals(equipVisitant)) {
+					Toast.makeText(AfegirPartit.this, "No poden ser el mateix equip!",
+						Toast.LENGTH_SHORT).show();
+					return;
+				}
+
 				final Dialog dialog = new Dialog(AfegirPartit.this);
 
 				dialog.setContentView(R.layout.layout_afegir_gol);
 				dialog.setTitle("Afegir gol");
 
-				int equipLocalPos = spinnerEquipLocal.getSelectedItemPosition();
-				int equipVisitantPos = spinnerEquipVisitant.getSelectedItemPosition();
-
-				String equipLocalNom = arrayListEquipLocal.get(equipLocalPos);
-				String equipVisitantNom = arrayListEquipVisitant.get(equipVisitantPos);
-
-				Equip equipLocal = dbmgr.queryEquip(equipLocalNom);
-				Equip equipVisitant = dbmgr.queryEquip(equipVisitantNom);
-
-				List<Jugador> jugadorsEquipLocal = equipLocal.getJugadors();
-				List<Jugador> jugadorsEquipVisitant = equipVisitant.getJugadors();
+				List<Jugador> jugadorsTitularsEquipLocal = equipLocal.getTitulars();
+				List<Jugador> jugadorsTitularsEquipVisitant = equipVisitant.getTitulars();
 
 				final List<Jugador> jugadors = new ArrayList<Jugador>();
-				jugadors.addAll(jugadorsEquipLocal);
-				jugadors.addAll(jugadorsEquipVisitant);
+				jugadors.addAll(jugadorsTitularsEquipLocal);
+				jugadors.addAll(jugadorsTitularsEquipVisitant);
 
 				List<String> nomJugadors = new ArrayList<String>();
-				for (Jugador j : jugadorsEquipLocal) {
+				for (Jugador j : jugadorsTitularsEquipLocal) {
 					nomJugadors.add(equipLocal.getNom() + ": " + j.getNom());
 				}
-				for (Jugador j : jugadorsEquipVisitant) {
+				for (Jugador j : jugadorsTitularsEquipVisitant) {
 					nomJugadors.add(equipVisitant.getNom() + ": " + j.getNom());
 				}
 
@@ -158,9 +229,8 @@ public class AfegirPartit extends AppCompatActivity {
 
 						Jugador j = jugadors.get(pos);
 
-						golsList.add(new Partit.Gol(j, minut));
+						arrayListGols.add(new Partit.Gol(j, minut));
 
-						arrayListGolsListView.add(j.getNom() + ": " + minut);
 						arrayAdapterGolsListView.notifyDataSetChanged();
 						dialog.cancel();
 					}
@@ -188,10 +258,12 @@ public class AfegirPartit extends AppCompatActivity {
 				int jornadaPos = spinnerJornada.getSelectedItemPosition();
 
 				int numeroJornada = arrayListJornada.get(jornadaPos);
-
 				Jornada jornada = dbmgr.queryJornada(numeroJornada);
 
-				if (equipLocalPos == equipVisitantPos) {
+				Equip equipLocal = arrayListEquipLocal.get(equipLocalPos);
+				Equip equipVisitant = arrayListEquipVisitant.get(equipVisitantPos);
+
+				if (equipLocal.equals(equipVisitant)) {
 					Toast.makeText(AfegirPartit.this, "No poden ser el mateix equip!",
 						Toast.LENGTH_SHORT).show();
 					return;
@@ -203,14 +275,8 @@ public class AfegirPartit extends AppCompatActivity {
 					return;
 				}
 
-				String equipLocalNom = arrayListEquipLocal.get(equipLocalPos);
-				String equipVisitantNom = arrayListEquipVisitant.get(equipVisitantPos);
-
-				Equip equipLocal = dbmgr.queryEquip(equipLocalNom);
-				Equip equipvisitant = dbmgr.queryEquip(equipVisitantNom);
-
-				Partit nouPartit = new Partit(equipLocal, equipvisitant, new Date());
-				nouPartit.addGolList(golsList);
+				Partit nouPartit = new Partit(equipLocal, equipVisitant, new Date());
+				nouPartit.addGolList(arrayListGols);
 
 				dbmgr.insertPartit(nouPartit);
 				nouPartit.updatePuntsEquips(dbmgr);
@@ -226,9 +292,25 @@ public class AfegirPartit extends AppCompatActivity {
 			@Override
 			public void onClick(View v)
 			{
-				finish();
+				if (arrayListGols.size() > 0) {
+					final Dialog dialog = new AlertDialog.Builder(AfegirPartit.this)
+						.setTitle("Canvis no desats...")
+						.setMessage("Estàs segur/a que vols tirar enrere?")
+						.setIcon(android.R.drawable.ic_dialog_alert)
+						.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int whichButton)
+							{
+								finish();
+							}
+						})
+						.setNegativeButton(android.R.string.no, null).show();
+				} else {
+					finish();
+				}
 			}
 		});
+
+		spinnerJornada.setSelection(arrayListJornada.indexOf(numeroJornada));
 	}
 
 	@Override
@@ -236,5 +318,28 @@ public class AfegirPartit extends AppCompatActivity {
 	{
 		super.onDestroy();
 		dbmgr.close();
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item)
+	{
+		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+
+		Partit.Gol gol = arrayListGols.get(info.position);
+
+		switch (item.getItemId()) {
+			case R.id.eliminar_gol:
+				arrayListGols.remove(gol);
+				arrayAdapterGolsListView.notifyDataSetChanged();
+				return true;
+		}
+		return false;
+	}
+
+	private void equipsSpinnerView(View view, int position)
+	{
+		TextView tv = (TextView) view.findViewById(android.R.id.text1);
+		Equip equip = equips.get(position);
+		tv.setText(equip.getNom());
 	}
 }

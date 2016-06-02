@@ -102,7 +102,6 @@ public class MostraJugadorsEquip extends AppCompatActivity {
 				if (j.getTipus() == Jugador.TipusJugador.RESERVA) {
 					nomReserves.add(j.getNom());
 					selectedListReserves.add(j);
-					Log.i("lel", "Reserva: " + j.getNom());
 				}
 			}
 
