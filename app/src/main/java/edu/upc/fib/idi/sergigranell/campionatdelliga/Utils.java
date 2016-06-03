@@ -1,12 +1,14 @@
 package edu.upc.fib.idi.sergigranell.campionatdelliga;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
@@ -15,6 +17,7 @@ import com.github.mikephil.charting.utils.ViewPortHandler;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -119,5 +122,23 @@ public final class Utils {
 			return String.valueOf((int)v);
 		}
 	};
+
+	public static String getNextJugadorName(DBManager dbmgr, Context context)
+	{
+		List<Jugador> jugadors = dbmgr.queryAllJugadors();
+		if (jugadors == null)
+			return null;
+
+		int numActual = 0;
+		for (Jugador j: jugadors) {
+			String nom = j.getNom();
+			for (int i = nom.length() - 1; i >= 0; i--) {
+				if (nom.charAt(i) == ' ') {
+					numActual = Integer.valueOf(nom.substring(i + 1));
+				}
+			}
+		}
+		return new String("Jugador " + (numActual + 1));
+	}
 
 }

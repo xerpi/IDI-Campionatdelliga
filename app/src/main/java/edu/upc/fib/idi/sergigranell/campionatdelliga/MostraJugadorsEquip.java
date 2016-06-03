@@ -2,6 +2,7 @@ package edu.upc.fib.idi.sergigranell.campionatdelliga;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -94,7 +95,39 @@ public class MostraJugadorsEquip extends AppCompatActivity {
 		selectedJugador = jugadors.get(info.position);
 
 		switch (item.getItemId()) {
-		case R.id.passar_a_reserva:
+		case R.id.titular_eliminar:
+		case R.id.reserva_eliminar:
+			final String nouNom = Utils.getNextJugadorName(dbmgr, MostraJugadorsEquip.this);
+
+			final Dialog dialog = new AlertDialog.Builder(MostraJugadorsEquip.this)
+				.setTitle("Eliminar jugador")
+				.setMessage("S'eliminarà el jugador " + selectedJugador.getNom() +
+					" i es fitxarà el jugador " + nouNom + ". Estàs d'acord?")
+				.setIcon(android.R.drawable.ic_dialog_alert)
+				.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton)
+					{
+						Jugador nouJugador = new Jugador(nouNom);
+						nouJugador.setTipus(selectedJugador.getTipus());
+
+						equip.removeJugador(selectedJugador);
+						equip.addJugador(nouJugador);
+
+						selectedJugador.setTipus(Jugador.TipusJugador.ELIMINAT);
+
+						dbmgr.updateJugador(selectedJugador);
+						dbmgr.insertJugador(nouJugador);
+						dbmgr.updateEquip(equip);
+
+						arrayAdapter.notifyDataSetChanged();
+						Toast.makeText(MostraJugadorsEquip.this, selectedJugador.getNom() +
+							" eliminat, " + nouJugador.getNom() + " fitxat.",
+							Toast.LENGTH_LONG).show();
+					}
+				})
+				.setNegativeButton(android.R.string.no, null).show();
+			return true;
+		case R.id.titular_passar_a_reserva:
 			selectedListReserves.clear();
 
 			List<String> nomReserves = new ArrayList<String>();
@@ -129,7 +162,7 @@ public class MostraJugadorsEquip extends AppCompatActivity {
 			AlertDialog alertReserves = dialogReserves.create();
 			alertReserves.show();
 			return true;
-		case R.id.passar_a_titlar:
+		case R.id.reserva_passar_a_titlar:
 			selectedListTitulars.clear();
 
 			List<String> nomTitulars = new ArrayList<String>();
@@ -137,7 +170,6 @@ public class MostraJugadorsEquip extends AppCompatActivity {
 				if (j.getTipus() == Jugador.TipusJugador.TITULAR) {
 					nomTitulars.add(j.getNom());
 					selectedListTitulars.add(j);
-					Log.i("lel", "Titular: " + j.getNom());
 				}
 			}
 

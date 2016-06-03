@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/passar_a_titlar"
+    <item android:id="@+id/reserva_passar_a_titlar"
           android:title="Passar a jugador titular" />
+
+    <item android:id="@+id/reserva_eliminar"
+          android:title="Eliminar jugador" />
 
 </menu>

@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/passar_a_reserva"
+    <item android:id="@+id/titular_passar_a_reserva"
           android:title="Passar a jugador reserva" />
+
+    <item android:id="@+id/titular_eliminar"
+          android:title="Eliminar jugador" />
 
 </menu>
