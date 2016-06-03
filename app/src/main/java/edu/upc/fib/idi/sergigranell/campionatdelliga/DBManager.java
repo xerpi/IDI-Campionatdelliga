@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by sergi.granell on 3/14/16.
@@ -142,11 +143,30 @@ public class DBManager extends SQLiteOpenHelper {
 		final GregorianCalendar gc = new GregorianCalendar(2016, 1, 1);
 		final Date date = gc.getTime();
 
+		Random random = new Random();
 		List <Jornada> jornades = new ArrayList<Jornada>();
 		for (int i = 1; i <= Utils.NUM_JORNADES_INICIALS; i++) {
 			List <Partit> partits = new ArrayList<Partit>();
 			for (int j = 0; j < Utils.NUM_EQUIPS; j+=2) {
-				Partit p = new Partit(equips.get(j), equips.get(j+1), i, 0, 0);
+				Partit p = new Partit(equips.get(j), equips.get(j+1), i);
+				int golsLocal = random.nextInt(Utils.NUM_RANDOM_MAX_GOLS);
+				int golsVisitant = random.nextInt(Utils.NUM_RANDOM_MAX_GOLS);
+				for (int k = 0; k < golsLocal; k++) {
+					Jugador jugador = p.getLocal().getTitulars().get(
+						random.nextInt(p.getLocal().getTitulars().size()));
+					p.addGol(jugador, random.nextInt(Utils.NUM_MINUTS_PARTIT + 1));
+
+					jugador.setGolsMarcats(jugador.getGolsMarcats() + 1);
+					updateJugador(db, jugador);
+				}
+				for (int k = 0; k < golsVisitant; k++) {
+					Jugador jugador = p.getVisitant().getTitulars().get(
+						random.nextInt(p.getVisitant().getTitulars().size()));
+					p.addGol(jugador, random.nextInt(Utils.NUM_MINUTS_PARTIT + 1));
+
+					jugador.setGolsMarcats(jugador.getGolsMarcats() + 1);
+					updateJugador(db, jugador);
+				}
 				p.updatePuntsEquips(db, this);
 				partits.add(p);
 			}
@@ -295,10 +315,8 @@ public class DBManager extends SQLiteOpenHelper {
 		return llistaJugadors;
 	}
 
-	public void updateJugador(Jugador jugador)
+	public void updateJugador(SQLiteDatabase db, Jugador jugador)
 	{
-		SQLiteDatabase db = this.getReadableDatabase();
-
 		ContentValues values = new ContentValues();
 		values.put(JugadorsEntry.COLUMN_NAME_TIPUS, jugador.getTipus().toString());
 		values.put(JugadorsEntry.COLUMN_NAME_GOLS_MARCATS, jugador.getGolsMarcats());
@@ -308,12 +326,16 @@ public class DBManager extends SQLiteOpenHelper {
 			jugador.getNom()
 		};
 
-		int count = db.update(
-			JugadorsEntry.TABLE_NAME,
+		db.update(JugadorsEntry.TABLE_NAME,
 			values,
 			selection,
 			selectionArgs);
+	}
 
+	public void updateJugador(Jugador jugador)
+	{
+		SQLiteDatabase db = this.getReadableDatabase();
+		updateJugador(db, jugador);
 		db.close();
 	}
 

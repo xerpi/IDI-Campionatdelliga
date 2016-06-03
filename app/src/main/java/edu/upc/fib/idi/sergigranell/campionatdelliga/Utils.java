@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.util.Log;
 
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
@@ -31,6 +30,8 @@ public final class Utils {
 	public final static int NUM_JUGADORS_TITULARS = 5;
 	public final static int NUM_JORNADES_INICIALS = 2;
 	public final static int NUM_JUGADORS_TOTALS = NUM_EQUIPS * NUM_JUGADORS_EQUIP;
+	public final static int NUM_RANDOM_MAX_GOLS = 10;
+	public final static int NUM_MINUTS_PARTIT = 40;
 
 	public final static int PICK_IMAGE_REQUEST = 1;
 

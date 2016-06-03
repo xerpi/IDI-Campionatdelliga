@@ -219,7 +219,7 @@ public class AfegirPartit extends AppCompatActivity {
 
 				final NumberPicker np = (NumberPicker)dialog.findViewById(R.id.numberpicker_minut_gol);
 				np.setMinValue(0);
-				np.setMaxValue(40);
+				np.setMaxValue(Utils.NUM_MINUTS_PARTIT);
 				np.setValue(minuteOfLastGol);
 
 				Button buttonAcceptarAfegirGol = (Button)dialog.findViewById(R.id.button_acceptar_afegir_gol);
