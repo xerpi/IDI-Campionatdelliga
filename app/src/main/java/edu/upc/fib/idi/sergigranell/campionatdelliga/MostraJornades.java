@@ -31,8 +31,6 @@ public class MostraJornades extends AppCompatActivity {
 		dbmgr = new DBManager(this);
 
 		arrayListJornades = new ArrayList<Jornada>();
-		arrayAdapterJornades = new ArrayAdapter<Jornada>(this, android.R.layout.simple_list_item_1, arrayListJornades);
-
 		arrayAdapterJornades = new ArrayAdapter<Jornada>(this, android.R.layout.simple_list_item_1, android.R.id.text1, arrayListJornades) {
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent) {

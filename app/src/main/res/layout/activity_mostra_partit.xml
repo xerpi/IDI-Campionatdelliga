@@ -73,4 +73,21 @@
         android:id="@+id/textview_jornada"
         android:layout_below="@+id/textview_resultat"
         android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Llista de gols del partit:"
+        android:id="@+id/textview_llista_gols_partit_text"
+        android:layout_marginTop="12dp"
+        android:layout_below="@+id/textview_jornada_string"
+        android:layout_alignParentStart="true"/>
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listview_llista_gols_partit"
+        android:layout_below="@+id/textview_llista_gols_partit_text"
+        android:layout_alignParentStart="true"/>
+
 </RelativeLayout>
