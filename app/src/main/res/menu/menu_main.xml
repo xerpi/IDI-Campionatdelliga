@@ -3,7 +3,7 @@
       tools:context=".MainActivity">
 
     <item android:id="@+id/main_activity_action_help"
-          android:title="Help"
+          android:title="Ajuda"
           android:orderInCategory="100"
           android:showAsAction="never"/>
 

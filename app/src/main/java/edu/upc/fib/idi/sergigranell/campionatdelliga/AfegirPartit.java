@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.provider.Telephony;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 public class AfegirPartit extends AppCompatActivity {
@@ -54,12 +56,13 @@ public class AfegirPartit extends AppCompatActivity {
 
 	private int minuteOfLastGol;
 
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_afegir_partit);
+
+		this.setTitle("Afegir nou partit");
 
 		numeroJornada = 1;
 
@@ -150,7 +153,35 @@ public class AfegirPartit extends AppCompatActivity {
 		}
 
 		spinnerEquipLocal = (Spinner)findViewById(R.id.afegir_partit_spinner_equip_local);
+		spinnerEquipLocal.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l)
+			{
+				spinnerEquipsChangeUpdateGolList();
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> adapterView)
+			{
+
+			}
+		});
+
 		spinnerEquipVisitant = (Spinner)findViewById(R.id.afegir_partit_spinner_equip_visitant);
+		spinnerEquipVisitant.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l)
+			{
+				spinnerEquipsChangeUpdateGolList();
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> adapterView)
+			{
+
+			}
+		});
+
 		spinnerJornada = (Spinner)findViewById(R.id.afegir_partit_spinner_jornada);
 		listViewGols = (ListView)findViewById(R.id.afegir_partit_listview_gols);
 		buttonAfegirGol = (Button)findViewById(R.id.afegir_partit_button_afegir_gol);
@@ -277,6 +308,13 @@ public class AfegirPartit extends AppCompatActivity {
 							numeroJornada + "!",
 						Toast.LENGTH_SHORT).show();
 					return;
+				} else if (dbmgr.existsPartit(equipLocal.getNom(), equipVisitant.getNom(), numeroJornada)
+					|| dbmgr.existsPartit(equipVisitant.getNom(), equipLocal.getNom(), numeroJornada)) {
+					Toast.makeText(AfegirPartit.this,
+						"Aquests dos partits ja han jugat en la jornada " +
+							numeroJornada + "!",
+						Toast.LENGTH_SHORT).show();
+					return;
 				}
 
 				Partit nouPartit = new Partit(equipLocal, equipVisitant, numeroJornada);
@@ -359,5 +397,33 @@ public class AfegirPartit extends AppCompatActivity {
 		TextView tv = (TextView) view.findViewById(android.R.id.text1);
 		Equip equip = equips.get(position);
 		tv.setText(equip.getNom());
+	}
+
+	private boolean jugadorListContainsJugador(List<Jugador> jugadorList, Jugador jugador)
+	{
+		for (Jugador j: jugadorList) {
+			if (j.getNom().equals(jugador.getNom())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private void spinnerEquipsChangeUpdateGolList()
+	{
+		int equipLocalPos = spinnerEquipLocal.getSelectedItemPosition();
+		int equipVisitantPos = spinnerEquipVisitant.getSelectedItemPosition();
+
+		Equip equipLocal = arrayListEquipLocal.get(equipLocalPos);
+		Equip equipVisitant = arrayListEquipVisitant.get(equipVisitantPos);
+
+		Iterator<Partit.Gol> it = arrayListGols.iterator();
+		while (it.hasNext()) {
+			Partit.Gol gol = it.next();
+			if (!jugadorListContainsJugador(equipLocal.getTitulars(), gol.getJugador())
+				|| !jugadorListContainsJugador(equipLocal.getTitulars(), gol.getJugador())) {
+				it.remove();
+			}
+		}
 	}
 }
