@@ -124,7 +124,7 @@ public final class Utils {
 		}
 	};
 
-	public static String getNextJugadorName(DBManager dbmgr, Context context)
+	public static String getNextJugadorName(DBManager dbmgr)
 	{
 		List<Jugador> jugadors = dbmgr.queryAllJugadors();
 		if (jugadors == null)
@@ -135,11 +135,32 @@ public final class Utils {
 			String nom = j.getNom();
 			for (int i = nom.length() - 1; i >= 0; i--) {
 				if (nom.charAt(i) == ' ') {
-					numActual = Integer.valueOf(nom.substring(i + 1));
+					int nouNum = Integer.valueOf(nom.substring(i + 1));
+					if (nouNum > numActual)
+						numActual = nouNum;
 				}
 			}
 		}
 		return new String("Jugador " + (numActual + 1));
 	}
 
+	public static int getNextJugadorNum(DBManager dbmgr)
+	{
+		List<Jugador> jugadors = dbmgr.queryAllJugadors();
+		if (jugadors == null)
+			return 0;
+
+		int numActual = 0;
+		for (Jugador j: jugadors) {
+			String nom = j.getNom();
+			for (int i = nom.length() - 1; i >= 0; i--) {
+				if (nom.charAt(i) == ' ') {
+					int nouNum = Integer.valueOf(nom.substring(i + 1));
+					if (nouNum > numActual)
+						numActual = nouNum;
+				}
+			}
+		}
+		return numActual + 1;
+	}
 }

@@ -23,6 +23,8 @@ public class Equip {
 	private List<Jugador> titulars;
 	private List<Jugador> reserves;
 
+	private boolean eliminat;
+
 	public Equip(String nom, String ciutat)
 	{
 		this.nom = nom;
@@ -34,6 +36,7 @@ public class Equip {
 		jugadors = new ArrayList<Jugador>();
 		titulars = new ArrayList<Jugador>();
 		reserves = new ArrayList<Jugador>();
+		this.eliminat = false;
 	}
 
 	public Equip(String nom, String ciutat, List<Jugador> jugadors)
@@ -152,6 +155,16 @@ public class Equip {
 			reserves.remove(jugador);
 		else
 			Log.i("info", "removeJugador: Tipus invalid de jugador");
+	}
+
+	public boolean isEliminat()
+	{
+		return eliminat;
+	}
+
+	public void setEliminat(boolean eliminat)
+	{
+		this.eliminat = eliminat;
 	}
 
 	@Override

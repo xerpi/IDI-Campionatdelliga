@@ -33,7 +33,7 @@
                     android:id="@+id/imageview_escut_equip"
                     android:src="@android:drawable/ic_menu_gallery"
                     android:layout_alignParentTop="true"
-                    android:layout_toEndOf="@+id/mostra_equip_textview_partits_guanyats_string"/>
+                    android:layout_centerHorizontal="true"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -46,45 +46,49 @@
                     android:gravity="center_vertical"
                     android:textAppearance="?android:attr/textAppearanceMedium"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Partits guanyats"
-                    android:id="@+id/mostra_equip_textview_partits_guanyats_string"
-                    android:layout_alignTop="@+id/mostra_equip_textview_partits_guanyats"
-                    android:layout_alignParentStart="true"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@android:color/holo_green_light"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="40dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Partits empatats"
-                    android:id="@+id/mostra_equip_textview_partits_empatats_string"
-                    android:layout_below="@+id/mostra_equip_textview_partits_guanyats_string"
-                    android:layout_alignParentStart="true"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@android:color/holo_blue_dark"/>
+                    android:text="0"
+                    android:id="@+id/textview_ciutat"
+                    android:layout_alignTop="@+id/textview_ciutat_string"
+                    android:layout_alignStart="@+id/mostra_equip_textview_partits_guanyats"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Partits perduts"
-                    android:id="@+id/mostra_equip_textview_partits_perduts_string"
-                    android:layout_below="@+id/mostra_equip_textview_partits_empatats_string"
-                    android:layout_alignParentStart="true"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@android:color/holo_red_dark"/>
+                    android:text="Ciutat"
+                    android:id="@+id/textview_ciutat_string"
+                    android:layout_above="@+id/mostra_equip_textview_partits_guanyats_string"
+                    android:layout_alignParentStart="true"
+                    />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Punts"
-                    android:id="@+id/mostra_equip_textview_partits_punts_string"
-                    android:layout_below="@+id/mostra_equip_textview_partits_perduts_string"
-                    android:layout_alignParentStart="true"
+                    android:text="0"
+                    android:id="@+id/mostra_equip_textview_punts"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#e5dd00"/>
+                    android:layout_alignTop="@+id/mostra_equip_textview_partits_punts_string"
+                    android:layout_alignStart="@+id/mostra_equip_textview_partits_perduts"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:id="@+id/mostra_equip_textview_partits_empatats"
+                    android:layout_below="@+id/mostra_equip_textview_partits_guanyats"
+                    android:layout_centerHorizontal="true"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -100,54 +104,75 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0"
-                    android:id="@+id/mostra_equip_textview_partits_empatats"
-                    android:layout_below="@+id/mostra_equip_textview_partits_guanyats"
-                    android:layout_centerHorizontal="true"
-                    android:textAppearance="?android:attr/textAppearanceMedium"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
                     android:id="@+id/mostra_equip_textview_partits_perduts"
-                    android:layout_above="@+id/mostra_equip_textview_partits_punts_string"
+                    android:layout_above="@+id/mostra_equip_textview_punts"
                     android:layout_centerHorizontal="true"
                     android:textAppearance="?android:attr/textAppearanceMedium"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="0"
-                    android:id="@+id/mostra_equip_textview_punts"
-                    android:layout_below="@+id/mostra_equip_textview_partits_perduts"
-                    android:layout_centerHorizontal="true"
-                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+                    android:text="Punts"
+                    android:id="@+id/mostra_equip_textview_partits_punts_string"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="#e5dd00"
+                    android:layout_below="@+id/mostra_equip_textview_partits_perduts_string"
+                    android:layout_alignParentStart="true"/>
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_below="@+id/mostra_equip_textview_partits_punts_string"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Partits perduts"
+                    android:id="@+id/mostra_equip_textview_partits_perduts_string"
+                    android:layout_below="@+id/mostra_equip_textview_partits_empatats_string"
                     android:layout_alignParentStart="true"
-                    android:layout_marginTop="27dp">
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@android:color/holo_red_dark"/>
 
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Mostra jugadors"
-                        android:id="@+id/button_mostra_jugadors"
-                        android:layout_below="@+id/mostra_equip_textview_partits_punts_string"
-                        android:layout_alignParentStart="true"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Partits empatats"
+                    android:id="@+id/mostra_equip_textview_partits_empatats_string"
+                    android:layout_below="@+id/mostra_equip_textview_partits_guanyats_string"
+                    android:layout_alignParentStart="true"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@android:color/holo_blue_dark"/>
 
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Mostra Evolució"
-                        android:id="@+id/button_mostra_evolucio"
-                        android:layout_below="@+id/button_mostra_jugadors"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignEnd="@+id/button_mostra_jugadors"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Partits guanyats"
+                    android:id="@+id/mostra_equip_textview_partits_guanyats_string"
+                    android:layout_alignTop="@+id/mostra_equip_textview_partits_guanyats"
+                    android:layout_alignParentStart="true"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@android:color/holo_green_light"/>
+            </RelativeLayout>
 
-                </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/mostra_equip_textview_partits_punts_string"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="27dp">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mostra jugadors"
+                    android:id="@+id/button_mostra_jugadors"
+                    android:layout_below="@+id/mostra_equip_textview_partits_punts_string"
+                    android:layout_alignParentStart="true"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mostra Evolució"
+                    android:id="@+id/button_mostra_evolucio"
+                    android:layout_below="@+id/button_mostra_jugadors"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignEnd="@+id/button_mostra_jugadors"/>
 
             </RelativeLayout>
 

@@ -97,7 +97,7 @@ public class MostraJugadorsEquip extends AppCompatActivity {
 		switch (item.getItemId()) {
 		case R.id.titular_eliminar:
 		case R.id.reserva_eliminar:
-			final String nouNom = Utils.getNextJugadorName(dbmgr, MostraJugadorsEquip.this);
+			final String nouNom = Utils.getNextJugadorName(dbmgr);
 
 			final Dialog dialog = new AlertDialog.Builder(MostraJugadorsEquip.this)
 				.setTitle("Eliminar jugador")

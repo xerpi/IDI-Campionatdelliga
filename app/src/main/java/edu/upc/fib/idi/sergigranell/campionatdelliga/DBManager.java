@@ -40,6 +40,7 @@ public class DBManager extends SQLiteOpenHelper {
 		public static final String COLUMN_NAME_PARTITS_PERDUTS = "partits_perduts";
 		public static final String COLUMN_NAME_JUGADORS = "jugadors";
 		public static final String COLUMN_NAME_ESCUTFILE = "escutfile";
+		public static final String COLUMN_NAME_ELIMINAT = "eliminat";
 	}
 
 	public static abstract class PartitsEntry {
@@ -73,7 +74,8 @@ public class DBManager extends SQLiteOpenHelper {
 			EquipsEntry.COLUMN_NAME_PARTITS_EMPATATS + " INTEGER," +
 			EquipsEntry.COLUMN_NAME_PARTITS_PERDUTS + " INTEGER," +
 			EquipsEntry.COLUMN_NAME_ESCUTFILE + " TEXT," +
-			EquipsEntry.COLUMN_NAME_JUGADORS + " TEXT" +
+			EquipsEntry.COLUMN_NAME_JUGADORS + " TEXT," +
+			EquipsEntry.COLUMN_NAME_ELIMINAT + " INTEGER" +
 		" )";
 
 	private static final String SQL_CREATE_PARTITS_ENTRIES =
@@ -237,6 +239,13 @@ public class DBManager extends SQLiteOpenHelper {
 		}
 	}
 
+	public void insertJugadors(List<Jugador> jugadors)
+	{
+		for (Jugador j: jugadors) {
+			insertJugador(j);
+		}
+	}
+
 	private Jugador getJugadorFromCursor(Cursor cursor)
 	{
 		String nom = cursor.getString(
@@ -378,6 +387,28 @@ public class DBManager extends SQLiteOpenHelper {
 		return existsJugador(jugador.getNom());
 	}
 
+	public List<Jugador> queryTop3JugadorsByGols()
+	{
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		Cursor cursor = db.query(JugadorsEntry.TABLE_NAME, null, null, null, null, null,
+			JugadorsEntry.COLUMN_NAME_GOLS_MARCATS + " DESC", "3");
+
+		if (cursor == null)
+			return null;
+
+		List<Jugador> llistaJugadors = new ArrayList<Jugador>();
+
+		while (cursor.moveToNext()) {
+			llistaJugadors.add(getJugadorFromCursor(cursor));
+		}
+
+		cursor.close();
+		db.close();
+
+		return llistaJugadors;
+	}
+
 	private String getJugadorsEquipAsJSONString(Equip equip)
 	{
 		JSONObject jsonJugadors = new JSONObject();
@@ -405,6 +436,7 @@ public class DBManager extends SQLiteOpenHelper {
 		contentValues.put(EquipsEntry.COLUMN_NAME_PARTITS_PERDUTS, equip.getPartitsPerduts());
 		contentValues.put(EquipsEntry.COLUMN_NAME_ESCUTFILE, equip.getEscutFile());
 		contentValues.put(EquipsEntry.COLUMN_NAME_JUGADORS, jsonJugadorsString);
+		contentValues.put(EquipsEntry.COLUMN_NAME_ELIMINAT, equip.isEliminat());
 		db.insert(EquipsEntry.TABLE_NAME, null, contentValues);
 	}
 
@@ -474,6 +506,9 @@ public class DBManager extends SQLiteOpenHelper {
 		String jsonJugadorsString = cursor.getString(
 			cursor.getColumnIndexOrThrow(EquipsEntry.COLUMN_NAME_JUGADORS)
 		);
+		boolean eliminat = (cursor.getInt(
+			cursor.getColumnIndexOrThrow(EquipsEntry.COLUMN_NAME_ELIMINAT)
+		) != 0);
 
 		List<Jugador> jugadors = getJugadorsEquipFromJSONString(jsonJugadorsString);
 
@@ -482,6 +517,7 @@ public class DBManager extends SQLiteOpenHelper {
 		equip.setPartitsEmpatats(partitsEmpatats);
 		equip.setPartitsPerduts(partitsPerduts);
 		equip.setEscutFile(escutFile);
+		equip.setEliminat(eliminat);
 
 		return equip;
 	}
@@ -497,7 +533,8 @@ public class DBManager extends SQLiteOpenHelper {
 			EquipsEntry.COLUMN_NAME_PARTITS_EMPATATS,
 			EquipsEntry.COLUMN_NAME_PARTITS_PERDUTS,
 			EquipsEntry.COLUMN_NAME_ESCUTFILE,
-			EquipsEntry.COLUMN_NAME_JUGADORS
+			EquipsEntry.COLUMN_NAME_JUGADORS,
+			EquipsEntry.COLUMN_NAME_ELIMINAT
 		};
 
 		String selection = EquipsEntry.COLUMN_NAME_NOM + "=?";
@@ -533,8 +570,15 @@ public class DBManager extends SQLiteOpenHelper {
 	{
 		SQLiteDatabase db = this.getReadableDatabase();
 
+		/* Només hem d'agafar els partits NO eliminats */
+
+		String selection = EquipsEntry.COLUMN_NAME_ELIMINAT + " =?";
+		String[] selectionArgs = {
+			"0"
+		};
+
 		Cursor cursor = db.query(EquipsEntry.TABLE_NAME,
-			null, null, null, null, null, null);
+			null, selection, selectionArgs, null, null, null);
 
 		if (cursor == null)
 			return null;
@@ -560,6 +604,7 @@ public class DBManager extends SQLiteOpenHelper {
 		values.put(EquipsEntry.COLUMN_NAME_PARTITS_PERDUTS, equip.getPartitsPerduts());
 		values.put(EquipsEntry.COLUMN_NAME_ESCUTFILE, equip.getEscutFile());
 		values.put(EquipsEntry.COLUMN_NAME_JUGADORS, getJugadorsEquipAsJSONString(equip));
+		values.put(EquipsEntry.COLUMN_NAME_ELIMINAT, equip.isEliminat());
 
 		String selection = EquipsEntry.COLUMN_NAME_NOM + " LIKE ?";
 		String[] selectionArgs = {
@@ -616,6 +661,29 @@ public class DBManager extends SQLiteOpenHelper {
 	public boolean existsEquip(Equip equip)
 	{
 		return existsEquip(equip.getNom());
+	}
+
+	public List<Equip> queryTop3EquipsByPunts()
+	{
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		Cursor cursor = db.query(EquipsEntry.TABLE_NAME, null, null, null, null, null,
+			EquipsEntry.COLUMN_NAME_PARTITS_GUANYATS + "*3 + " +
+				EquipsEntry.COLUMN_NAME_PARTITS_GUANYATS + " DESC", "3");
+
+		if (cursor == null)
+			return null;
+
+		List<Equip> llistaEquips = new ArrayList<Equip>();
+
+		while (cursor.moveToNext()) {
+			llistaEquips.add(getEquipFromCursor(cursor));
+		}
+
+		cursor.close();
+		db.close();
+
+		return llistaEquips;
 	}
 
 	private String getGolsPartitAsJSONString(Partit partit)
@@ -1096,5 +1164,28 @@ public class DBManager extends SQLiteOpenHelper {
 	public boolean existsJornada(Jornada jornada)
 	{
 		return existsJornada(jornada.getNumero());
+	}
+
+	public int getCurrentJornadaNum()
+	{
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		String[] projection = {
+			"MAX(" + JornadesEntry.COLUMN_NAME_NUMERO + ")"
+		};
+
+		Cursor cursor = db.query(JornadesEntry.TABLE_NAME, projection,
+			null, null, null, null, null);
+
+		if (!cursor.moveToFirst()) {
+			db.close();
+			return 0;
+		}
+
+		int num = cursor.getInt(0);
+
+		db.close();
+
+		return num;
 	}
 }

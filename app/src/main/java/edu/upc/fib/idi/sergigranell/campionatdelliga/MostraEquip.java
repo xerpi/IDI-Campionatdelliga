@@ -18,6 +18,7 @@ public class MostraEquip extends AppCompatActivity {
 
 	private DBManager dbmgr;
 
+	private TextView ciutatTextView;
 	private TextView partitsGuanyatsTextView;
 	private TextView partitsEmpatatsTextView;
 	private TextView partitsPerdutsTextView;
@@ -54,6 +55,8 @@ public class MostraEquip extends AppCompatActivity {
 		String escutFile = equip.getEscutFile();
 		escutBitmap = Utils.loadEscutBitmap(this, escutFile);
 
+		ciutatTextView = (TextView)findViewById(
+			R.id.textview_ciutat);
 		partitsGuanyatsTextView = (TextView)findViewById(
 			R.id.mostra_equip_textview_partits_guanyats);
 		partitsEmpatatsTextView = (TextView)findViewById(
@@ -65,6 +68,7 @@ public class MostraEquip extends AppCompatActivity {
 		mostraEvolucioButton = (Button)findViewById(R.id.button_mostra_evolucio);
 		escutEquipImageView = (ImageView)findViewById(R.id.imageview_escut_equip);
 
+		ciutatTextView.setText(equip.getCiutat());
 		partitsGuanyatsTextView.setText(Integer.toString(equip.getPartitsGuanyats()));
 		partitsEmpatatsTextView.setText(Integer.toString(equip.getPartitsEmpatats()));
 		partitsPerdutsTextView.setText(Integer.toString(equip.getPartitsPerduts()));
